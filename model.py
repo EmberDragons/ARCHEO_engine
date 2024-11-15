@@ -66,7 +66,7 @@ class Cube():
             LIGHT_INT.append(light_int)
         while len(LIGHT_POS) < 20: #we have 20 lights max
             light_pos = (0,0,0)
-            light_pos = (0,0,0)
+            light_col = (0,0,0)
             light_int = 0
             LIGHT_POS.append(light_pos)
             LIGHT_COL.append(light_col)
