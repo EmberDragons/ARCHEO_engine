@@ -1,0 +1,5 @@
+Chart on how to present your project:
+    1. Majuscules with every Class Name
+    2. Important attributes will be in full MAJ with _
+    3. Not important attributes will be in min with _
+    4.function in full min with _
