@@ -5,9 +5,13 @@ import time
 from function import *
 
 class Cube():
-    def __init__(self, app, img_name='brick.jpg'):
+    def __init__(self, app, img_name='brick.jpg', shininess = 1.0):
         self.app = app
         self.ctx = app.ctx
+
+        #params
+        self.shininess = shininess
+
         self.vbo = self.get_vbo() #triangle vertex
         self.shader_program = self.get_shader_program('default')
         self.vao = self.get_vao()
@@ -20,8 +24,7 @@ class Cube():
     def update(self):
         #model
         self.m_model = self.update_rotation()
-        self.buffer_lights()
-        self.buffer_matrices()
+        self.buffer()
 
     def update_rotation(self):
         rotation_matrix = glm.mat4x4(
@@ -48,6 +51,11 @@ class Cube():
         m_model = glm.mat4()
         return m_model
 
+    def buffer(self):
+        self.shader_program['cam_pos'].write(self.app.camera.position)
+        self.buffer_lights()
+        self.buffer_matrices()
+        
     def buffer_matrices(self):
         self.shader_program['m_proj'].write(self.app.camera.m_proj)
         self.shader_program['m_view'].write(self.app.camera.m_view)
@@ -79,6 +87,8 @@ class Cube():
         self.shader_program['light_pos'].write(LIGHT_POS)
         self.shader_program['light_color'].write(LIGHT_COL)
         self.shader_program['light_intensity'].write(LIGHT_INT)
+        #shiny thinggy part
+        self.shader_program['shininess'].write(np.array([self.shininess], dtype = 'f4'))
 
     def render(self):
         self.update()
