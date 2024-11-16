@@ -5,21 +5,32 @@ import time
 from function import *
 
 class Cube():
-    def __init__(self, app, img_name='brick.jpg', shininess = 1.0):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), tex_id=0, shininess = 1.0):
         self.app = app
         self.ctx = app.ctx
 
         #params
         self.shininess = shininess
+        self.position = glm.vec3(pos)
+        self.rotation = glm.vec3(rot)
 
+        self.m_model = self.get_model_matrix()
+        self.texture = self.get_texture(path=f'img/{app.textures[tex_id]}')
         self.vbo = self.get_vbo() #triangle vertex
         self.shader_program = self.get_shader_program('default')
         self.vao = self.get_vao()
-        self.m_model = self.get_model_matrix()
-        self.texture = self.get_texture(path=f'img/{img_name}')
         self.buffer_matrices()
         self.buffer_lights()
         self.set_texture()
+
+    def get_model_matrix(self):
+        m_model = glm.mat4()
+        m_model = glm.translate(m_model, self.position)
+
+        m_model = glm.rotate(m_model, self.rotation.x, glm.vec3(1,0,0))
+        m_model = glm.rotate(m_model, self.rotation.y, glm.vec3(0,1,0))
+        m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0,0,1))
+        return m_model
 
     def update(self):
         #model
@@ -45,11 +56,6 @@ class Cube():
     def set_texture(self):
         self.shader_program['u_texture_0']=0
         self.texture.use()
-
-
-    def get_model_matrix(self):
-        m_model = glm.mat4()
-        return m_model
 
     def buffer(self):
         self.shader_program['cam_pos'].write(self.app.camera.position)

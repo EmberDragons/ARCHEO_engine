@@ -18,6 +18,7 @@ uniform float shininess;
 
 float AMBIANT_LIGHT = 0.1;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
+float STRENGTH_SPEC = 100.0; //the diffuse has more impact
 
 void main(){
     //lighting
@@ -46,7 +47,7 @@ void main(){
             //specular touch (based on the angle with the light)
             vec3 v_reflect_light = reflect(-(v_vector_light), v_normals);
             if (dot(v_reflect_light,v_cam)>0){
-                SPECULAR_LIGHT += pow(dot(v_reflect_light,v_cam), 100*shininess*light_intensity[iteration]); //multiplied to get a specular highlight
+                SPECULAR_LIGHT += pow(dot(v_reflect_light,v_cam), STRENGTH_SPEC*shininess*light_intensity[iteration]); //multiplied to get a specular highlight
             }
             TOTAL_SHADING_COLOR += shade;
         }

@@ -1,7 +1,7 @@
 #imports
 import pygame as pg
 import moderngl as mgl
-import sys
+import sys, os
 import ctypes
 
 from model import *
@@ -33,6 +33,11 @@ class GraphicEngine:
         self.clock = pg.time.Clock()
         self.time = 0
         self.delta_time = 0
+
+        #texture set up
+        self.textures=[]
+        self.textures_set_up()
+
         #scene and lights
         self.lights = []
         self.light_set_up()
@@ -40,12 +45,16 @@ class GraphicEngine:
         self.scene_set_up()
 
     def scene_set_up(self):
-        self.scene.append(Cube(self))
-        self.scene.append(Cube(self))
+        self.scene.append(Cube(self, (0,1,-1), (20,0,10), tex_id=1))
+        self.scene.append(Cube(self, (5,0,1), (90,120,-10), tex_id=0, shininess=1))
     def light_set_up(self):
-        self.lights.append(Light((1,0.6,0.4),(20,20,230),0.4))
-        self.lights.append(Light((-2,-1.2,-1.2),(230,10,30),0.2))
-        self.lights.append(Light((2,3,3),(20,200,230),0.4))
+        self.lights.append(Light((4,3,0.5),(20,20,230),0.6))
+        self.lights.append(Light((-2,-4,-1),(230,10,30),0.7))
+        self.lights.append(Light((2,3,3),(20,200,230),0.8))
+    def textures_set_up(self):
+        list_elt = os.listdir("img/")
+        for image in list_elt:
+            self.textures.append(image)
 
     def check_events(self):
         for event in pg.event.get():
