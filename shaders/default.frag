@@ -17,6 +17,7 @@ uniform float light_intensity[20];
 uniform float shininess;
 
 float AMBIANT_LIGHT = 0.1;
+float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
 void main(){
     //lighting
@@ -30,10 +31,10 @@ void main(){
     int iteration = 0;
     while (iteration<20) {
         //base color light
-        float r = light_color[iteration].r/255;
-        float g = light_color[iteration].g/255;
-        float b = light_color[iteration].b/255;
-        vec3 shade = vec3(r,g,b);
+        float r_col = light_color[iteration].r/255;
+        float g_col = light_color[iteration].g/255;
+        float b_col = light_color[iteration].b/255;
+        vec3 shade = vec3(r_col,g_col,b_col);
         float d_light = sqrt(pow((light_pos[iteration].x-v_pos.x),2)+pow((light_pos[iteration].y-v_pos.y),2)+pow((light_pos[iteration].z-v_pos.z),2));
 
         //we calculate the diffuse strength (basic intensity based on dot product)
@@ -47,14 +48,13 @@ void main(){
             if (dot(v_reflect_light,v_cam)>0){
                 SPECULAR_LIGHT += pow(dot(v_reflect_light,v_cam), 100*shininess*light_intensity[iteration]); //multiplied to get a specular highlight
             }
-            
+            TOTAL_SHADING_COLOR += shade;
         }
-        TOTAL_SHADING_COLOR += shade;
         iteration+=1;
     }
 
     //combining all lights, with specular and diffuse
-    vec3 shading = TOTAL_SHADING_COLOR*(AMBIANT_LIGHT+DIFFUSE_LIGHT+SPECULAR_LIGHT);
+    vec3 shading = TOTAL_SHADING_COLOR*(AMBIANT_LIGHT+(DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT);
 
     //converting it to color with 255 as max
     vec3 raw_color = texture(u_texture_0, uv_0).rgb;
