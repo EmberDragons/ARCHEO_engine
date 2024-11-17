@@ -7,6 +7,8 @@ import ctypes
 from model import *
 from camera import *
 from lights import *
+from mesh import Mesh
+
 
 #classes
 class GraphicEngine:
@@ -34,9 +36,8 @@ class GraphicEngine:
         self.time = 0
         self.delta_time = 0
 
-        #texture set up
-        self.textures=[]
-        self.textures_set_up()
+        #mesh, vbo and vao set up
+        self.mesh = Mesh(self)
 
         #scene and lights
         self.lights = []
@@ -45,22 +46,16 @@ class GraphicEngine:
         self.scene_set_up()
 
     def scene_set_up(self):
-        self.scene.append(Cube(self, (0,1,-1), (20,0,10), tex_id=1))
-        self.scene.append(Cube(self, (5,0,1), (90,120,-10), tex_id=0, shininess=1))
+        self.scene.append(Cube(self, (-6,0,0), tex_id=1))
+        self.scene.append(Cube(self, (6,0,0), tex_id=0))
     def light_set_up(self):
-        self.lights.append(Light((4,3,0.5),(20,20,230),0.6))
-        self.lights.append(Light((-2,-4,-1),(230,10,30),0.7))
-        self.lights.append(Light((2,3,3),(20,200,230),0.8))
-    def textures_set_up(self):
-        list_elt = os.listdir("img/")
-        for image in list_elt:
-            self.textures.append(image)
+        self.lights.append(Light((-13,-2,0),(230,20,230),0.4))
+        self.lights.append(Light((5,3,2),(20,240,230),0.3))
 
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
-                for obj in self.scene:
-                    obj.destroy()
+                self.mesh.destroy()
                 pg.quit()
                 sys.exit()
     

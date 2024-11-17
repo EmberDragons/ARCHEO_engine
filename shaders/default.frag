@@ -11,14 +11,17 @@ uniform vec3 cam_pos;
 
 uniform sampler2D u_texture_0;
 
+//matrices
+uniform mat4 m_proj;
+uniform mat4 m_view;
+uniform mat4 m_model;
+
 uniform vec3 light_pos[20]; //max number of lights is 10
 uniform vec3 light_color[20];
 uniform float light_intensity[20];
-uniform float shininess;
 
-float AMBIANT_LIGHT = 0.1;
+float AMBIANT_LIGHT = 0.05;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
-float STRENGTH_SPEC = 100.0; //the diffuse has more impact
 
 void main(){
     //lighting
@@ -47,15 +50,16 @@ void main(){
             //specular touch (based on the angle with the light)
             vec3 v_reflect_light = reflect(-(v_vector_light), v_normals);
             if (dot(v_reflect_light,v_cam)>0){
-                SPECULAR_LIGHT += pow(dot(v_reflect_light,v_cam), STRENGTH_SPEC*shininess*light_intensity[iteration]); //multiplied to get a specular highlight
+                SPECULAR_LIGHT = pow(dot(v_reflect_light,v_cam), 32); //multiplied to get a specular highlight
             }
             TOTAL_SHADING_COLOR += shade;
         }
+
         iteration+=1;
     }
 
     //combining all lights, with specular and diffuse
-    vec3 shading = TOTAL_SHADING_COLOR*(AMBIANT_LIGHT+(DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT);
+    vec3 shading = (TOTAL_SHADING_COLOR*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT/10))+vec3(1,1,1)*AMBIANT_LIGHT;
 
     //converting it to color with 255 as max
     vec3 raw_color = texture(u_texture_0, uv_0).rgb;
