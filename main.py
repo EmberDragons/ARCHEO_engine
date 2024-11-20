@@ -48,9 +48,11 @@ class GraphicEngine:
     def scene_set_up(self):
         self.scene.append(Cube(self, (-6,0,0), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
+        self.scene.append(Pyramid(self, (0,0,0), tex_id=0))
+
     def light_set_up(self):
-        self.lights.append(Light((-13,-2,0),(230,20,230),0.5))
-        self.lights.append(Light((4,2,2),(20,240,230),0.6))
+        self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
+        self.lights.append(Light((20,10,10),(110,120,80),10))
 
     def check_events(self):
         for event in pg.event.get():
