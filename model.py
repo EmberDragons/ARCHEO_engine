@@ -102,3 +102,24 @@ class Pyramid(BaseModel):
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0
         self.update()
+
+class Object(BaseModel):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube'):
+        super().__init__(app, pos, rot, scale, tex_id, vao_name)
+        self.on_init()
+
+    def update(self):
+        self.texture.use()
+        #matrices
+        self.shader_program['m_proj'].write(self.camera.m_proj)
+        self.shader_program['m_view'].write(self.camera.m_view)
+        self.shader_program['cam_pos'].write(self.camera.position)
+        self.shader_program['m_model'].write(self.m_model)
+        #light
+        self.buffer_lights()
+
+    def on_init(self):
+        #texture part
+        self.texture = self.app.mesh.texture.textures[self.tex_id]
+        self.shader_program['u_texture_0'] = 0
+        self.update()

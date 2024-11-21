@@ -1,12 +1,18 @@
 import numpy as np
 import moderngl as mgl
 import glm
+import pywavefront
 
 class VBO:
     def __init__(self, ctx):
         self.vbos={}
+        self.ctx = ctx
+        #all inits
         self.vbos['cube'] = CubeVBO(ctx)
         self.vbos['pyramid'] = PyramidVBO(ctx)
+
+    def load_object(self, name):
+        self.vbos[name] = ObjectVBO(self.ctx, f"model/{name}.obj")
 
     def destroy(self):
         [vbo.destroy() for vbo in self.vbos.values()]
@@ -129,4 +135,18 @@ class PyramidVBO(BaseVBO):
         normal_data = np.array(normales, dtype = 'f4')
         
         vertex_data = np.hstack([tex_coord_data, vertex_data, normal_data])
+        return vertex_data
+
+class ObjectVBO(BaseVBO):
+    def __init__(self, app, link):
+        super().__init__(app)
+        self.link = link
+        self.format = '2f 3f 3f'
+        self.attrib = ['in_texcoord', 'in_position', 'in_normales']
+    
+    def get_vertex_data(self):
+        objs = pywavefront.Wavefront(self.link, cache=True, parse=True)
+        obj = objs.materials.popitem()[1]
+        vertex_data = obj.vertices
+        vertex_data = np.array(vertex_data, dtype='f4')
         return vertex_data
