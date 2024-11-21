@@ -67,5 +67,11 @@ void main(){
     float g = raw_color.g/255;
     float b = raw_color.b/255;
     vec3 color = vec3(r*shading.r,g*shading.g,b*shading.b)*255;
+    
+    //gamma correction
+    float gamma = 2.2;
+    color=pow(color, vec3(gamma));
+    color=pow(color, vec3(1/gamma));
+
     fragColor = vec4(color, 1.0);
 }
