@@ -6,10 +6,11 @@ import time
 from function import *
 
 class BaseModel:
-    def __init__(self, app, pos=(0,0,0), rot = (0,0,0), tex_id=0, vao_name='cube'):
+    def __init__(self, app, pos=(0,0,0), rot = (0,0,0), scale = (1,1,1), tex_id=0, vao_name='cube'):
         self.app = app
         self.position = glm.vec3(pos)
         self.rotation = glm.vec3(rot)
+        self.scale = glm.vec3(scale)
         self.m_model = self.get_model_matrix()
         self.tex_id = tex_id
         self.vao = app.mesh.vao.vaos[vao_name]
@@ -25,6 +26,8 @@ class BaseModel:
         m_model = glm.rotate(m_model, self.rotation.x, glm.vec3(1,0,0))
         m_model = glm.rotate(m_model, self.rotation.y, glm.vec3(0,1,0))
         m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0,0,1))
+        
+        m_model = glm.scale(m_model, self.scale)
         return m_model
 
     def buffer_lights(self):
@@ -59,8 +62,8 @@ class BaseModel:
         self.vao.render()
 
 class Cube(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), tex_id=0, vao_name='cube'):
-        super().__init__(app, pos, rot, tex_id, vao_name)
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube'):
+        super().__init__(app, pos, rot, scale, tex_id, vao_name)
         self.on_init()
 
     def update(self):
@@ -80,8 +83,8 @@ class Cube(BaseModel):
         self.update()
 
 class Pyramid(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), tex_id=0, vao_name='pyramid'):
-        super().__init__(app, pos, rot, tex_id, vao_name)
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='pyramid'):
+        super().__init__(app, pos, rot, scale, tex_id, vao_name)
         self.on_init()
 
     def update(self):

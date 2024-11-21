@@ -46,7 +46,7 @@ class GraphicEngine:
         self.scene_set_up()
 
     def scene_set_up(self):
-        self.scene.append(Cube(self, (-6,0,0), tex_id=1))
+        self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
         self.scene.append(Pyramid(self, (0,0,0), tex_id=0))
 
