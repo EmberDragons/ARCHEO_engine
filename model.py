@@ -105,7 +105,13 @@ class Pyramid(BaseModel):
 
 class Object(BaseModel):
     def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube'):
-        super().__init__(app, pos, rot, scale, tex_id, vao_name)
+        self.tex_id = vao_name
+        if type(tex_id) == int:
+            app.mesh.load_texture_obj(vao_name) #only load vao, no tex
+            self.tex_id=tex_id
+        else:
+            app.mesh.load_texture_obj(vao_name, tex_id) #load both vao and tex
+        super().__init__(app, pos, rot, scale, self.tex_id, vao_name)
         self.on_init(tex_id)
 
     def update(self):

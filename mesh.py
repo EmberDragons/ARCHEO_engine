@@ -6,8 +6,10 @@ class Mesh:
         self.vao = VAO(app.ctx)
         self.texture = Texture(app.ctx)
     
-    def load_texture_obj(self, name, link):
-        self.texture.load_texture_obj(name, link)
+    def load_texture_obj(self, name, link=None):
+        self.vao.load_vao(name)
+        if link != None:
+            self.texture.load_texture_obj(name, link)
 
     def destroy(self):
         self.vao.destroy()

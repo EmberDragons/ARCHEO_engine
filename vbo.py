@@ -138,11 +138,11 @@ class PyramidVBO(BaseVBO):
         return vertex_data
 
 class ObjectVBO(BaseVBO):
-    def __init__(self, app, link):
-        super().__init__(app)
+    def __init__(self, ctx, link):
         self.link = link
+        super().__init__(ctx)
         self.format = '2f 3f 3f'
-        self.attrib = ['in_texcoord', 'in_position', 'in_normales']
+        self.attrib = ['in_texcoord', 'in_normales', 'in_position'] #herrrrreee all problems arise
     
     def get_vertex_data(self):
         objs = pywavefront.Wavefront(self.link, cache=True, parse=True)
