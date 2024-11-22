@@ -49,12 +49,7 @@ class GraphicEngine:
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
         self.scene.append(Pyramid(self, (0,0,0), tex_id=0))
-        self.scene.append(Object(self, (0,0,5), (90,90,100), vao_name = "20430_Cat_v1_NEW"))
-
-    def load_obj(self, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), name=None, link_tex=None):
-        if (link_tex != None):
-            self.mesh.load_texture_obj(name, link_tex)
-        self.scene.append(Object(self, pos, rot, scale, tex_id=name, vao_name = name))
+        self.scene.append(Object(self, (0,0,5), vao_name = "cottage_obj"))
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
