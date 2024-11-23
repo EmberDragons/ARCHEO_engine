@@ -145,7 +145,7 @@ class ObjectVBO(BaseVBO):
         self.attrib = ['in_texcoord', 'in_normales', 'in_position'] #herrrrreee all problems arise
     
     def get_vertex_data(self):
-        obj = Wavefront(self.link, parse=True)
+        obj = Wavefront(self.link, parse=True, cache=True)
         verts = []
         n=0
         for name, material in obj.materials.items():
