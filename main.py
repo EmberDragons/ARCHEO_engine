@@ -49,7 +49,7 @@ class GraphicEngine:
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
         self.scene.append(Pyramid(self, (0,0,0), tex_id=0))
-        self.scene.append(Object(self, (0,0,5), vao_name = "cottage_obj"))
+        self.scene.append(Object(self, (0,0,5), (0,0,90), scale=(3,3,3), vao_name = "Knife", tex_id="model/texture.jpg"))
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))

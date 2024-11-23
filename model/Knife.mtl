@@ -1,0 +1,112 @@
+# Blender MTL File: 'faca.blend'
+# Material Count: 10
+
+newmtl Knife
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Gabriel Ferreira\Desktop\modelos 3d\Knife\Knife_dae\texture.jpg
+
+newmtl madeira
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Gabriel Ferreira\Desktop\modelos 3d\Knife\Knife_dae\texture.jpg
+
+newmtl madeira_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd -s 3.000000 3.000000 1.000000 C:\\Users\\Gabriel Ferreira\\Desktop\\textura\\wood.jpg
+
+newmtl metal
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Gabriel Ferreira\Desktop\modelos 3d\Knife\Knife_dae\texture.jpg
+
+newmtl metal2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Gabriel Ferreira\Desktop\modelos 3d\Knife\Knife_dae\texture.jpg
+
+newmtl metal2_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd -s 2.000000 2.000000 1.000000 C:\\Users\\Gabriel Ferreira\\Desktop\\textura\\iron2.jpg
+
+newmtl metal3
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.598720 0.159729
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Gabriel Ferreira\Desktop\modelos 3d\Knife\Knife_dae\texture.jpg
+
+newmtl metal3_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.598720 0.159729
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd -s 3.000000 3.000000 1.000000 C:\\Users\\Gabriel Ferreira\\Desktop\\textura\\gold.jpg
+
+newmtl metal3_madeira.jpg
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.598720 0.159729
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Gabriel Ferreira\Desktop\textura\madeira.jpg
+
+newmtl metal_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\Gabriel Ferreira\\Desktop\\textura\\iron.jpg

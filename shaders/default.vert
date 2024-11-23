@@ -22,7 +22,7 @@ float random(vec2 st){
 }
 
 void main(){
-    uv_0 = in_texcoord;
+    uv_0 = vec2(1.0-in_texcoord);
     gl_Position = m_proj*m_view*m_model*vec4(in_position, 1.0);//vector4 for vertex pos
 
     

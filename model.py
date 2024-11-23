@@ -9,7 +9,7 @@ class BaseModel:
     def __init__(self, app, pos=(0,0,0), rot = (0,0,0), scale = (1,1,1), tex_id=0, vao_name='cube'):
         self.app = app
         self.position = glm.vec3(pos)
-        self.rotation = glm.vec3(rot)
+        self.rotation = glm.vec3(glm.radians(rot))
         self.scale = glm.vec3(scale)
         self.m_model = self.get_model_matrix()
         self.tex_id = tex_id
@@ -128,4 +128,5 @@ class Object(BaseModel):
         #texture part
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0
+        self.texture.use()
         self.update()

@@ -1,7 +1,7 @@
 import numpy as np
 import moderngl as mgl
 import glm
-import pywavefront
+from pywavefront import Wavefront
 
 class VBO:
     def __init__(self, ctx):
@@ -145,8 +145,16 @@ class ObjectVBO(BaseVBO):
         self.attrib = ['in_texcoord', 'in_normales', 'in_position'] #herrrrreee all problems arise
     
     def get_vertex_data(self):
-        objs = pywavefront.Wavefront(self.link, cache=True, parse=True)
-        obj = objs.materials.popitem()[1]
-        vertex_data = obj.vertices
-        vertex_data = np.array(vertex_data, dtype='f4')
-        return vertex_data
+        obj = Wavefront('model/Knife.obj', parse=True,cache=True)
+        verts = []
+        n=0
+        for name, material in obj.materials.items():
+            # Contains the vertex format (string) such as "T2F_N3F_V3F"
+            # Contains the vertex list of floats in the format described above
+            if n<2:
+                for vert in material.vertices:
+                    verts.append(vert)
+            n+=1
+        verts = np.array(verts, dtype = 'f4')
+        print(verts)
+        return verts
