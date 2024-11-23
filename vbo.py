@@ -145,13 +145,13 @@ class ObjectVBO(BaseVBO):
         self.attrib = ['in_texcoord', 'in_normales', 'in_position'] #herrrrreee all problems arise
     
     def get_vertex_data(self):
-        obj = Wavefront('model/Knife.obj', parse=True,cache=True)
+        obj = Wavefront(self.link, parse=True)
         verts = []
         n=0
         for name, material in obj.materials.items():
             # Contains the vertex format (string) such as "T2F_N3F_V3F"
             # Contains the vertex list of floats in the format described above
-            if n<2:
+            if n<1: #we can only load one object for now
                 for vert in material.vertices:
                     verts.append(vert)
             n+=1
