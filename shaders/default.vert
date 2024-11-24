@@ -10,6 +10,7 @@ out vec2 uv_0;
 out vec3 v_pos;
 out vec3 v_normals;
 out float rd_light_diffraction;
+out vec2 pixel_pos;
 
 
 //matrices
@@ -24,6 +25,7 @@ float random(vec2 st){
 void main(){
     uv_0 = vec2(1.0-in_texcoord);
     gl_Position = m_proj*m_view*m_model*vec4(in_position, 1.0);//vector4 for vertex pos
+    pixel_pos = vec2(gl_Position);
 
     
     //lighting

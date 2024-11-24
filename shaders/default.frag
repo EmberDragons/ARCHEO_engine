@@ -4,6 +4,7 @@ layout (location = 0) in vec2 uv_0;
 layout (location = 1) in vec3 v_pos;
 layout (location = 2) in vec3 v_normals;
 layout (location = 3) in float rd_light_diffraction;
+layout (location = 4) in vec2 pixel_pos;
 
 out vec4 fragColor;
 
@@ -20,8 +21,13 @@ uniform vec3 light_pos[20]; //max number of lights is 10
 uniform vec3 light_color[20];
 uniform float light_intensity[20];
 
+//light params
 float AMBIANT_LIGHT = 0.1;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
+
+//crosshair param
+vec2 center = vec2(0,0);
+float dist_center = 0.05;
 
 void main(){
     //lighting
@@ -72,6 +78,11 @@ void main(){
     float gamma = 2.2;
     color=pow(color, vec3(gamma));
     color=pow(color, vec3(1/gamma));
+
+    //crosshair
+    if (sqrt(pow(pixel_pos.x-center.x,2)+pow(pixel_pos.y-center.y,2))<dist_center) {
+        color = vec3(1.0);
+    }
 
     fragColor = vec4(color, 1.0);
 }

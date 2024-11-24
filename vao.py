@@ -1,11 +1,13 @@
 from vbo import VBO
 from shader_program import Shader_Program
+import glm
 
 #uses both shader_program and vbo to turn them into a vao
 class VAO:
     def __init__(self, ctx):
         self.ctx = ctx
-        self.vbo = VBO(self.ctx)
+        self.scales = [] #every new object will have it's scale here
+        self.vbo = VBO(self.ctx, self)
         self.program = Shader_Program(self.ctx)
         self.vaos={}
 

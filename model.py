@@ -6,12 +6,13 @@ import time
 from function import *
 
 class BaseModel:
-    def __init__(self, app, pos=(0,0,0), rot = (0,0,0), scale = (1,1,1), tex_id=0, vao_name='cube'):
+    def __init__(self, app, pos=(0,0,0), rot = (0,0,0), scale = (1,1,1), tex_id=0, vao_name='cube', set_scale=False):
         self.app = app
         self.position = glm.vec3(pos)
         self.rotation = glm.vec3(glm.radians(rot))
         self.scale = glm.vec3(scale)
-        self.m_model = self.get_model_matrix()
+        self.set_scale = set_scale
+        self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
         self.vao = app.mesh.vao.vaos[vao_name]
         self.shader_program = self.vao.program
@@ -19,7 +20,7 @@ class BaseModel:
 
     def update(self): ...
 
-    def get_model_matrix(self):
+    def get_model_matrix(self, app):
         m_model = glm.mat4()
         m_model = glm.translate(m_model, self.position)
 
@@ -27,7 +28,10 @@ class BaseModel:
         m_model = glm.rotate(m_model, self.rotation.y, glm.vec3(0,1,0))
         m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0,0,1))
         
-        m_model = glm.scale(m_model, self.scale)
+        if self.set_scale:
+            m_model = glm.scale(m_model, (self.scale/app.mesh.vao.scales[-1]))
+        else:
+            m_model = glm.scale(m_model, (self.scale))
         return m_model
 
     def buffer_lights(self):
@@ -111,8 +115,8 @@ class Object(BaseModel):
             self.tex_id=tex_id
         else:
             app.mesh.load_texture_obj(vao_name, tex_id) #load both vao and tex
-        super().__init__(app, pos, rot, scale, self.tex_id, vao_name)
-        self.on_init(tex_id)
+        super().__init__(app, pos, rot, scale, self.tex_id, vao_name, set_scale=True)
+        self.on_init()
 
     def update(self):
         self.texture.use()
@@ -124,7 +128,7 @@ class Object(BaseModel):
         #light
         self.buffer_lights()
 
-    def on_init(self, tex_id):
+    def on_init(self):
         #texture part
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0

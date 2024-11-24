@@ -1,5 +1,6 @@
 import glm
 import pygame as pg
+import math
 
 FOV = 50
 NEAR = 0.1
@@ -62,6 +63,39 @@ class Camera():
             self.position += velocity*self.up
         if keys[pg.K_LCTRL]:
             self.position -= velocity*self.up
+        if keys[pg.K_a]:
+            hit_obj = self.ray_dist(self.position)
+            print(hit_obj)
+
+    
+    def ray_dist(self, point):
+        #we need to use the raymarching approach to find the object we are looking at
+        # we know the safe dist is three :  _ _ _ we check new safe dist : _ if too small, we hit an object
+        min_return = 0.2
+        max_return = 100
+
+        smallest_dist = 100
+        new_point = point #the new point
+        for obj in self.app.scene:
+            dist = self.sdBox(obj.position, obj.scale, point)
+            if dist <= min_return:
+                #hit
+                return obj
+            if dist > max_return:
+                #no hit we missed it =C
+                return None
+            if smallest_dist>dist:
+                #we raymarch again
+                smallest_dist=dist
+        new_point = point+self.forward*smallest_dist
+        return self.ray_dist(new_point)
+    
+    def sdBox(self, center, scale, point):
+        dist_x = abs(point.x-center.x)
+        dist_y = abs(point.y-center.y)
+        dist_z = abs(point.z-center.z)
+        return (math.sqrt((max(dist_x-scale.x,0))**2 + (max(dist_y-scale.y,0))**2 + (max(dist_z-scale.z,0))**2))
+    
 
     def reload_matrices(self):
         #view matrix

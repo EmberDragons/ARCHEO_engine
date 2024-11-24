@@ -4,15 +4,16 @@ import glm
 from pywavefront import Wavefront
 
 class VBO:
-    def __init__(self, ctx):
+    def __init__(self, ctx, vao):
         self.vbos={}
+        self.vao = vao
         self.ctx = ctx
         #all inits
         self.vbos['cube'] = CubeVBO(ctx)
         self.vbos['pyramid'] = PyramidVBO(ctx)
 
     def load_object(self, name):
-        self.vbos[name] = ObjectVBO(self.ctx, f"model/{name}.obj")
+        self.vbos[name] = ObjectVBO(self.ctx, f"model/{name}.obj", self.vao)
 
     def destroy(self):
         [vbo.destroy() for vbo in self.vbos.values()]
@@ -138,8 +139,10 @@ class PyramidVBO(BaseVBO):
         return vertex_data
 
 class ObjectVBO(BaseVBO):
-    def __init__(self, ctx, link):
+    def __init__(self, ctx, link, vao):
         self.link = link
+        self.vao = vao
+        self.scale = glm.vec3(0.0)
         super().__init__(ctx)
         self.format = '2f 3f 3f'
         self.attrib = ['in_texcoord', 'in_normales', 'in_position'] #herrrrreee all problems arise
@@ -148,13 +151,21 @@ class ObjectVBO(BaseVBO):
         obj = Wavefront(self.link, parse=True, cache=True)
         verts = []
         n=0
+
+        #scale the object correctly
+        scale = [0.0,0.0,0.0]
+
         for name, material in obj.materials.items():
             # Contains the vertex format (string) such as "T2F_N3F_V3F"
             # Contains the vertex list of floats in the format described above
             if n<1: #we can only load one object for now
+                vert_axe = 0
                 for vert in material.vertices:
+                    if vert > scale[vert_axe%3]: #get the scale
+                        scale[vert_axe%3] = vert
                     verts.append(vert)
+                    vert_axe+=1
             n+=1
         verts = np.array(verts, dtype = 'f4')
-        print(verts)
+        self.vao.scales.append(glm.vec3(scale[0], scale[1], scale[2]))
         return verts
