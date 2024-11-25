@@ -22,16 +22,20 @@ class BaseModel:
 
     def get_model_matrix(self, app):
         m_model = glm.mat4()
-        m_model = glm.translate(m_model, self.position)
+        if self.set_scale:
+            m_model = glm.translate(m_model, glm.vec3(self.position.x, self.position.y-self.scale.y, self.position.z))
+        else:
+            m_model = glm.translate(m_model, self.position)
 
         m_model = glm.rotate(m_model, self.rotation.x, glm.vec3(1,0,0))
         m_model = glm.rotate(m_model, self.rotation.y, glm.vec3(0,1,0))
         m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0,0,1))
         
         if self.set_scale:
-            m_model = glm.scale(m_model, (self.scale/app.mesh.vao.scales[-1]))
+            print(app.mesh.vao.scales[-1])
+            m_model = glm.scale(m_model, ((self.scale.x,self.scale.z,self.scale.y)/(app.mesh.vao.scales[-1]/2)))
         else:
-            m_model = glm.scale(m_model, (self.scale))
+            m_model = glm.scale(m_model, (self.scale.x,self.scale.z,self.scale.y))
         return m_model
 
     def buffer_lights(self):

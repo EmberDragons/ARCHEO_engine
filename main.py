@@ -22,7 +22,8 @@ class GraphicEngine:
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
         #opengl context creation
-        pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
+        
+        self.display_surface = pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
         #mouse settings and lock
         pg.event.set_grab(True)
         pg.mouse.set_visible(False)
@@ -46,7 +47,7 @@ class GraphicEngine:
         self.scene_set_up()
 
     def scene_set_up(self):
-        self.scene.append(Object(self, (0,0,5), (-90,0,0), scale=(2,2,2), vao_name = "Male", tex_id="model/20430_cat_diff_v1.jpg"))
+        self.scene.append(Object(self, (0,0,10), (-90,0,0), scale=(2,1,2), vao_name = "20430_Cat_v1_NEW", tex_id="model/20430_cat_diff_v1.jpg"))
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
         self.scene.append(Pyramid(self, (0,0,0), tex_id=0))

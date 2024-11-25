@@ -153,18 +153,19 @@ class ObjectVBO(BaseVBO):
         n=0
 
         #scale the object correctly
-        scale = [0.0,0.0,0.0]
+        scale = [1.0,1.0,1.0]
 
         for name, material in obj.materials.items():
             # Contains the vertex format (string) such as "T2F_N3F_V3F"
             # Contains the vertex list of floats in the format described above
             if n<1: #we can only load one object for now
                 vert_axe = 0
-                for vert in material.vertices:
-                    if vert > scale[vert_axe%3]: #get the scale
-                        scale[vert_axe%3] = vert
+                for vert in material.vertices: #A right-hand coordinate system is used
+                    if scale[vert_axe%3]<abs(vert):
+                        scale[vert_axe%3] = abs(vert)
+
+                    vert_axe +=1
                     verts.append(vert)
-                    vert_axe+=1
             n+=1
         verts = np.array(verts, dtype = 'f4')
         self.vao.scales.append(glm.vec3(scale[0], scale[1], scale[2]))
