@@ -5,6 +5,8 @@ class Shader_Program:
         self.ctx=ctx
         self.programs={}
         self.programs['default'] = self.get_program('default')
+        self.programs['ui'] = self.get_program('ui')
+        self.programs['letters'] = self.get_program('letters')
         
     def get_program(self, shader_name):
         with open(f'shaders/{shader_name}.vert') as file:

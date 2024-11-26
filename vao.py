@@ -19,6 +19,10 @@ class VAO:
         self.vaos['pyramid'] = self.get_vao(
             program = self.program.programs['default'],
             vbo = self.vbo.vbos['pyramid'])
+        
+        self.vaos['plane'] = self.get_vao(
+            program = self.program.programs['ui'],
+            vbo = self.vbo.vbos['plane'])
     
     def load_vao(self, name):
         #object vao

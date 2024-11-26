@@ -6,6 +6,7 @@ layout (location = 2) in vec3 v_normals;
 layout (location = 3) in float rd_light_diffraction;
 layout (location = 4) in vec2 pixel_pos;
 
+
 out vec4 fragColor;
 
 uniform vec3 cam_pos;
