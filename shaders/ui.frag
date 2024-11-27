@@ -7,12 +7,7 @@ layout (location = 4) in vec2 pixel_pos;
 
 out vec4 fragColor;
 
-uniform sampler2D u_texture_0;
-
-//matrices
-uniform mat4 m_proj;
-uniform mat4 m_view;
-uniform mat4 m_model;
+uniform vec3 color;
 
 //crosshair param
 vec2 center = vec2(0,0);
@@ -21,12 +16,12 @@ float dist_center = 0.004;
 void main(){
 
     //combining all lights, with specular and diffuse
-    vec4 color = vec4(0.0);
+    vec4 ui_col = vec4(color,0.0);
 
     //crosshair
-    if (sqrt(pow(pixel_pos.x-center.x,2)+pow(pixel_pos.y-center.y,2))<dist_center) {
-        color = vec4(1.0);
-    }
+    //if (sqrt(pow(pixel_pos.x-center.x,2)+pow(pixel_pos.y-center.y,2))<dist_center) {
+    //    ui_col = vec4(color,1.0);
+    //}
 
-    fragColor = color;
+    fragColor = ui_col;
 }

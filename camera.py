@@ -74,7 +74,7 @@ class Camera():
     
     def ray_dist(self, point):
         #we need to use the raymarching approach to find the object we are looking at
-        # we know the safe dist is three :  _ _ _ we check new safe dist : _ if too small, we hit an object
+        # we know the safe dist is three :  _ _ _ we check new safe dist : _ if too small, we hit an object (raymarching approch)
         min_return = 0.2
         max_return = 100
 

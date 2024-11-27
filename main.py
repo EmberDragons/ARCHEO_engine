@@ -49,7 +49,8 @@ class GraphicEngine:
         self.light_set_up()
         self.scene = []
         self.scene_set_up()
-        self.ui = self.ui_set_up()
+        self.ui = []
+        self.ui_set_up()
 
     def scene_set_up(self):
         self.scene.append(Object(self, (0,0,10), (-90,0,0), scale=(2,1,2), vao_name = "20430_Cat_v1_NEW", tex_id="model/20430_cat_diff_v1.jpg"))
@@ -57,7 +58,10 @@ class GraphicEngine:
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
     
     def ui_set_up(self):
-        return UI(self)
+        self.ui.append(UI(self, pos=(3,0,0), scale=(0.25,1.0,1.0), col=(0.1,0.1,0.12))) #background right window
+        self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(0.03,0.03,0.02))) #background right window
+        self.ui.append(UI(self, pos=(3,1.5,0), scale=(0.25,0.38,1.0), col=(0.12,0.2,0.3))) #background right window params
+
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
@@ -74,11 +78,14 @@ class GraphicEngine:
         #busy with rendering everything on screen
         #clear framebuffer
         self.ctx.clear(color=(0.12,0.11,0.1)) #background color
+
+        #render ui first
+        for id in range(len(self.ui)-1,-1,-1): #we must render them from last to first
+            self.ui[id].render()
+
         #render scene
-        self.ui.render()
         for obj in self.scene:
             obj.render()
-
 
         #text rendering
         self.drawText(140, 120, "cube")

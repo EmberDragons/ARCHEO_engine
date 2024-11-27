@@ -107,7 +107,7 @@ class UIVBO(BaseVBO):
         return vertex_data
     
     def get_vertex_data(self):
-        vertices = [(0,-1), (-1,-1), (-1,1), (0,1)]
+        vertices = [(1,-1), (-1,-1), (-1,1), (1,1)]
         indices = [(0,2,3), (0,1,2)]
         vertex_data = self.get_data(vertices, indices)
 
