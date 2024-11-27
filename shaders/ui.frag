@@ -16,25 +16,17 @@ uniform mat4 m_model;
 
 //crosshair param
 vec2 center = vec2(0,0);
-float dist_center = 0.05;
+float dist_center = 0.004;
 
 void main(){
 
     //combining all lights, with specular and diffuse
-    vec3 shading = vec3(1,1,1);
-
-    //converting it to color with 255 as max
-    vec3 color = texture(u_texture_0, uv_0).rgb;
-    
-    //gamma correction
-    float gamma = 2.2;
-    color=pow(color, vec3(gamma));
-    color=pow(color, vec3(1/gamma));
+    vec4 color = vec4(0.0);
 
     //crosshair
     if (sqrt(pow(pixel_pos.x-center.x,2)+pow(pixel_pos.y-center.y,2))<dist_center) {
-        color = vec3(0.0);
+        color = vec4(1.0);
     }
 
-    fragColor = vec4(color, 1.0);
+    fragColor = color;
 }

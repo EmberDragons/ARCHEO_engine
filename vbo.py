@@ -11,7 +11,7 @@ class VBO:
         #all inits
         self.vbos['cube'] = CubeVBO(ctx)
         self.vbos['pyramid'] = PyramidVBO(ctx)
-        self.vbos['plane'] = PlaneVBO(ctx)
+        self.vbos['ui'] = UIVBO(ctx)
 
     def load_object(self, name):
         self.vbos[name] = ObjectVBO(self.ctx, f"model/{name}.obj", self.vao)
@@ -92,12 +92,12 @@ class CubeVBO(BaseVBO):
         vertex_data = np.hstack([tex_coord_data, vertex_data, normal_data])
         return vertex_data
 
-class PlaneVBO(BaseVBO):
+class UIVBO(BaseVBO):
     def __init__(self, ctx):
         data = self.get_vertex_data()
         super().__init__(ctx)
-        self.format = '2f 3f'
-        self.attrib = ['in_texcoord', 'in_position']
+        self.format = '2f'
+        self.attrib = ['in_position']
 
     @staticmethod
     def get_data(vertices, indices):
@@ -107,15 +107,11 @@ class PlaneVBO(BaseVBO):
         return vertex_data
     
     def get_vertex_data(self):
-        vertices = [(1,-1,0), (-1,-1,0), (-1,1,0), (1,1,0)]
+        vertices = [(0,-1), (-1,-1), (-1,1), (0,1)]
         indices = [(0,2,3), (0,1,2)]
         vertex_data = self.get_data(vertices, indices)
 
-        tex_coord = [(0,0),(1,0),(1,1),(0,1)]
-        tex_coord_indices = [(0,2,3), (0,1,2)]
-        tex_coord_data = self.get_data(tex_coord, tex_coord_indices)
-
-        vertex_data = np.hstack([tex_coord_data, vertex_data])
+        vertex_data = np.flip(vertex_data,1).copy(order='C')
         return vertex_data
     
 class PyramidVBO(BaseVBO):

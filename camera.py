@@ -51,18 +51,22 @@ class Camera():
     def move(self):
         velocity = SPEED*self.app.delta_time
         keys = pg.key.get_pressed()
+        movement = 0
         if keys[pg.K_z]:
-            self.position += velocity*self.forward
+            movement += velocity*self.forward
         if keys[pg.K_s]:
-            self.position -= velocity*self.forward
+            movement -= velocity*self.forward
         if keys[pg.K_d]:
-            self.position += velocity*self.right
+            movement += velocity*self.right
         if keys[pg.K_q]:
-            self.position -= velocity*self.right
+            movement -= velocity*self.right
         if keys[pg.K_SPACE]:
-            self.position += velocity*self.up
+            movement += velocity*self.up
         if keys[pg.K_LCTRL]:
-            self.position -= velocity*self.up
+            movement -= velocity*self.up
+
+        self.position+=movement
+
         if keys[pg.K_a]:
             hit_obj = self.ray_dist(self.position)
             print(hit_obj)

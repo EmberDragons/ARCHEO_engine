@@ -91,28 +91,16 @@ class Cube(BaseModel):
         self.shader_program['u_texture_0'] = 0
         self.update()
 
-class Plane(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='plane'):
+class UI(BaseModel):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='ui'):
         super().__init__(app, pos, rot, scale, tex_id, vao_name)
         self.on_init()
 
     def update(self):
-        self.texture.use()
-        #matrices
-        self.shader_program['m_proj'].write(self.camera.m_proj)
-        self.shader_program['m_view'].write(self.camera.m_view)
-        self.shader_program['m_model'].write(self.m_model)
-        #pos
-        self.update_pos()
-
-    def update_pos(self):
-        self.position = self.app.camera.position+self.app.camera.forward*0.25 + self.original_pos
-        self.m_model = self.get_model_matrix(self.app)
+        ...
 
     def on_init(self):
         #texture part
-        self.texture = self.app.mesh.texture.textures[self.tex_id]
-        self.shader_program['u_texture_0'] = 0
         self.update()
 
 class Pyramid(BaseModel):

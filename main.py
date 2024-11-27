@@ -49,20 +49,19 @@ class GraphicEngine:
         self.light_set_up()
         self.scene = []
         self.scene_set_up()
+        self.ui = self.ui_set_up()
 
     def scene_set_up(self):
         self.scene.append(Object(self, (0,0,10), (-90,0,0), scale=(2,1,2), vao_name = "20430_Cat_v1_NEW", tex_id="model/20430_cat_diff_v1.jpg"))
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
-        self.scene.append(Plane(self, (-0.5,0,0.11), scale=(0.5,1,1), tex_id=2))
+    
+    def ui_set_up(self):
+        return UI(self)
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
         self.lights.append(Light((20,10,10),(110,120,80),10))
-
-    def drawText(self, x, y, text):                                                
-        textSurface = self.font.render(text, True, (255, 255, 66, 255)).convert_alpha()
-        textData = pg.image.tostring(textSurface, "RGBA", True)
 
     def check_events(self):
         for event in pg.event.get():
@@ -76,14 +75,21 @@ class GraphicEngine:
         #clear framebuffer
         self.ctx.clear(color=(0.12,0.11,0.1)) #background color
         #render scene
+        self.ui.render()
         for obj in self.scene:
             obj.render()
+
 
         #text rendering
         self.drawText(140, 120, "cube")
         #swap buffers
         pg.display.flip()
     
+
+    def drawText(self, x, y, text):                                                
+        textSurface = self.font.render(text, True, (255, 255, 66, 255)).convert_alpha()
+        textData = pg.image.tostring(textSurface, "RGBA", True)
+
     def get_time(self):
         self.time = pg.time.get_ticks()*0.001
 
