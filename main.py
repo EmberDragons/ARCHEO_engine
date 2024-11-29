@@ -28,9 +28,6 @@ class GraphicEngine:
         #opengl context creation
         
         self.display_surface = pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
-        #mouse settings and lock
-        pg.event.set_grab(True)
-        pg.mouse.set_visible(False)
         #detect current opengl for usage
         self.ctx = mgl.create_context()
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)

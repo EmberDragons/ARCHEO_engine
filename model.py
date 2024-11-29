@@ -101,6 +101,10 @@ class UI(BaseModel):
         self.shader_program['pos'].write(self.position)
         self.shader_program['scale'].write(self.scale)
         self.shader_program['color'].write(self.color)
+        self.shader_program['hit'].write(glm.float32(0.0))
+        if self.app.camera.selected_obj != None:
+            self.shader_program['hit'].write(glm.float32(1.0))
+
 
     def on_init(self):
         self.update()
