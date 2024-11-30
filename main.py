@@ -15,7 +15,7 @@ class GraphicEngine:
     def __init__(self, win_size=(1000,1000)):
         #init pygame modules and set up
         pg.init()
-        self.font = pg.font.SysFont('arial', 64)
+        self.font = pg.font.SysFont('comicsansms', 100)
         #window size manager
         self.WIN_SIZE = win_size
         #opengl attribute with pygame
@@ -64,9 +64,10 @@ class GraphicEngine:
         self.ui.append(UI(self, pos=(3,1.5,0), scale=(0.25,0.38,1.0), col=(0.12,0.2,0.3))) #background right window params
 
     def letter_set_up(self):
-        self.letter.append(Letter(self, pos=(1,1,0), scale=(0.16,0.25,0), tex_id="P")) 
-        self.letter.append(Letter(self, pos=(38,35,0), scale=(0.016,0.025,0), tex_id="O")) 
-        self.letter.append(Letter(self, pos=(41,35,0), scale=(0.016,0.025,0), tex_id="S")) 
+        self.letter.append(Letter(self, pos=(12,41,0), scale=(0.050,0.022,0), tex_id="NAME: "))
+        self.letter.append(Letter(self, pos=(6.5,34,0), scale=(0.100,0.022,0), tex_id="POSITION: ")) 
+        self.letter.append(Letter(self, pos=(6.5,31,0), scale=(0.100,0.022,0), tex_id="ROTATION: ")) 
+        self.letter.append(Letter(self, pos=(10.18,28,0), scale=(0.060,0.022,0), tex_id="SCALE: ")) 
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
