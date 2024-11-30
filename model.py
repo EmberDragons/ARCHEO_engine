@@ -33,7 +33,6 @@ class BaseModel:
         m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0,0,1))
         
         if self.set_scale:
-            print(app.mesh.vao.scales[-1])
             m_model = glm.scale(m_model, ((self.scale.x,self.scale.z,self.scale.y)/(app.mesh.vao.scales[-1]/2)))
         else:
             m_model = glm.scale(m_model, (self.scale.x,self.scale.z,self.scale.y))
@@ -105,9 +104,30 @@ class UI(BaseModel):
         if self.app.camera.selected_obj != None:
             self.shader_program['hit'].write(glm.float32(1.0))
 
-
     def on_init(self):
         self.update()
+
+class Letter(BaseModel):
+    def __init__(self, app, pos=(0,0,0), col=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='letters'):
+        if type(tex_id) != int:
+            app.mesh.load_texture_obj(vao_name, tex_id, load_letters = True) #load both vao and tex
+        super().__init__(app, pos, (0,0,0), scale, tex_id, vao_name)
+        self.color = glm.vec3(col)
+        self.on_init()
+
+    def update(self):
+        self.texture.use()
+
+        self.shader_program['pos'].write(self.position)
+        self.shader_program['scale'].write(self.scale)
+        self.shader_program['color'].write(self.color)
+
+    def on_init(self):
+        #texture part
+        self.texture = self.app.mesh.texture.textures[self.tex_id]
+        self.shader_program['u_texture_0'] = 0
+        self.update()
+
 
 class Pyramid(BaseModel):
     def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='pyramid'):

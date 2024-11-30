@@ -24,6 +24,10 @@ class VAO:
             program = self.program.programs['ui'],
             vbo = self.vbo.vbos['ui'])
     
+        self.vaos['letters'] = self.get_vao(
+            program = self.program.programs['letters'],
+            vbo = self.vbo.vbos['letters'])
+    
     def load_vao(self, name):
         #object vao
         self.vbo.load_object(name) #we have created an instance of model

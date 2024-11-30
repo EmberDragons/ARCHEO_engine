@@ -10,9 +10,6 @@ out vec4 fragColor;
 uniform vec3 color;
 uniform float hit;
 
-//crosshair param
-vec2 center = vec2(0,0);
-float dist_center = 0.004;
 
 void main(){
 
@@ -21,10 +18,6 @@ void main(){
     if (hit==1.0){
         ui_col = vec4(1.0,1.0,1.0,0.0);
     }
-    //crosshair
-    //if (sqrt(pow(pixel_pos.x-center.x,2)+pow(pixel_pos.y-center.y,2))<dist_center) {
-    //    ui_col = vec4(color,1.0);
-    //}
 
     fragColor = ui_col;
 }

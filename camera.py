@@ -1,12 +1,13 @@
 import glm
 import pygame as pg
+import sys, os
 import math
 
-FOV = 50
+FOV = 60
 NEAR = 0.1
 FAR = 100
 SPEED = 0.01
-SENSITIVITY = 0.1
+SENSITIVITY = 0.2
 
 class Camera():
     def __init__(self, app, position = (0,0,0), yaw=90, pitch=0):
@@ -58,7 +59,7 @@ class Camera():
         self.up = glm.normalize(glm.cross(self.right, self.forward))
 
     def update(self):
-        self.move()
+        self.check_keys()
         if self.lock:
             self.set_mouse_locked()
             self.rotate()
@@ -67,7 +68,8 @@ class Camera():
             self.set_mouse_unlocked()
         self.reload_matrices()
     
-    def move(self):
+    def check_keys(self):
+        #movement
         velocity = SPEED*self.app.delta_time
         keys = pg.key.get_pressed()
         movement = 0
@@ -85,6 +87,17 @@ class Camera():
             movement -= velocity*self.up
 
         self.position+=movement
+
+        #props instantiation
+        for event in pg.event.get():
+            if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                self.app.mesh.destroy()
+                pg.quit()
+                sys.exit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_1:
+                self.app.add_cube()
+            if event.type == pg.KEYDOWN and event.key == pg.K_2:
+                self.app.add_light()
 
         #screen movementa nd locking
         if pg.mouse.get_pressed()[2]:

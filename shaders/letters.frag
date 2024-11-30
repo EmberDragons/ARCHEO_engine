@@ -1,19 +1,19 @@
 #version 410
 
+layout (location = 0) in vec2 uv_0;
+layout (location = 1) in vec2 pixel_pos;
 
-
-//we define that a letter in_pos is 7*15
-//            ooo 
-//          oo   oo
-//          oo   
-//            oo
-//              oo
-//          oo   oo
-//            ooo
 
 out vec4 fragColor;
 
+uniform vec3 color;
+uniform float hit;
+
+uniform sampler2D u_texture_0;
+
 
 void main(){
-    fragColor = vec4(0.0, 1.0, 1.0, 1.0);
+    vec3 raw_color = texture(u_texture_0, uv_0).rgb;
+    raw_color+=color;
+    fragColor = vec4(raw_color,1.0);
 }

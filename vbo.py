@@ -12,6 +12,7 @@ class VBO:
         self.vbos['cube'] = CubeVBO(ctx)
         self.vbos['pyramid'] = PyramidVBO(ctx)
         self.vbos['ui'] = UIVBO(ctx)
+        self.vbos['letters'] = LetterVBO(ctx)
 
     def load_object(self, name):
         self.vbos[name] = ObjectVBO(self.ctx, f"model/{name}.obj", self.vao)
@@ -93,6 +94,28 @@ class CubeVBO(BaseVBO):
         return vertex_data
 
 class UIVBO(BaseVBO):
+    def __init__(self, ctx):
+        data = self.get_vertex_data()
+        super().__init__(ctx)
+        self.format = '2f'
+        self.attrib = ['in_position']
+
+    @staticmethod
+    def get_data(vertices, indices):
+        #separate the vertices in triangles with indices
+        data = [vertices[ind] for triangle in indices for ind in triangle]
+        vertex_data = np.array(data, dtype = 'f4')
+        return vertex_data
+    
+    def get_vertex_data(self):
+        vertices = [(1,-1), (-1,-1), (-1,1), (1,1)]
+        indices = [(0,2,3), (0,1,2)]
+        vertex_data = self.get_data(vertices, indices)
+
+        vertex_data = np.flip(vertex_data,1).copy(order='C')
+        return vertex_data
+    
+class LetterVBO(BaseVBO):
     def __init__(self, ctx):
         data = self.get_vertex_data()
         super().__init__(ctx)

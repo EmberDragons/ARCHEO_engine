@@ -26,10 +26,6 @@ uniform float light_intensity[20];
 float AMBIANT_LIGHT = 0.1;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
-//crosshair param
-vec2 center = vec2(0,0);
-float dist_center = 0.05;
-
 void main(){
     //lighting
     vec3 TOTAL_SHADING_COLOR = vec3(0.0);
@@ -80,10 +76,7 @@ void main(){
     color=pow(color, vec3(gamma));
     color=pow(color, vec3(1/gamma));
 
-    //crosshair
-    if (sqrt(pow(pixel_pos.x-center.x,2)+pow(pixel_pos.y-center.y,2))<dist_center) {
-        color = vec3(1.0);
-    }
+
 
     fragColor = vec4(color, 1.0);
 }
