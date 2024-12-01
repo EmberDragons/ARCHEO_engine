@@ -15,7 +15,7 @@ class GraphicEngine:
     def __init__(self, win_size=(1000,1000)):
         #init pygame modules and set up
         pg.init()
-        self.font = pg.font.SysFont('comicsansms', 100)
+        self.font = pg.font.SysFont('merriweather', 100)
         #window size manager
         self.WIN_SIZE = win_size
         #opengl attribute with pygame
@@ -58,16 +58,27 @@ class GraphicEngine:
         self.scene.append(Cube(self, pos, tex_id=0))
 
     def ui_set_up(self):
+        #color palette for uis: 
+        # blue 0.12,0.2,0.3
+        # green deep 29, 120, 116
+        # dark 4, 21, 31
+        # white 242, 247, 242
+        # gray 112, 102, 119
         self.ui.append(UI(self, pos=(0,0,0), scale=(0.003,0.003,0.003), col=(1,1,1))) #crosshair
-        self.ui.append(UI(self, pos=(3,0,0), scale=(0.25,1.0,1.0), col=(0.1,0.1,0.12))) #background right window
-        self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(0.03,0.03,0.02))) #background right window
-        self.ui.append(UI(self, pos=(3,1.5,0), scale=(0.25,0.38,1.0), col=(0.12,0.2,0.3))) #background right window params
+        self.ui.append(UI(self, pos=(2.73,0,0), scale=(0.28,1.0,1.0), col=(4/255, 21/255, 31/255))) #background1 right window
+        self.ui.append(UI(self, pos=(2.97,0,0), scale=(0.25,1.0,1.0), col=(112/255, 102/255, 119/255))) #background2 right window
+        self.ui.append(UI(self, pos=(2.97,1.5,0), scale=(0.25,0.38,1.0), col=(0.12,0.2,0.3))) #background right window params
+        self.ui.append(UI(self, pos=(2.97,23.2,0), scale=(0.25,0.04,1.0), col=(29/255, 120/255, 116/255))) #background right window name
+        self.ui.append(UI(self, pos=(3.32, 2.83,0), scale=(0.22,0.21,1.0), col=(0.1,0.13,0.2))) #background right under params
+        self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(4/255, 21/255, 31/255))) #background high
 
     def letter_set_up(self):
-        self.letter.append(Letter(self, pos=(12,41,0), scale=(0.050,0.022,0), tex_id="NAME: "))
-        self.letter.append(Letter(self, pos=(6.5,34,0), scale=(0.100,0.022,0), tex_id="POSITION: ")) 
-        self.letter.append(Letter(self, pos=(6.5,31,0), scale=(0.100,0.022,0), tex_id="ROTATION: ")) 
-        self.letter.append(Letter(self, pos=(10.18,28,0), scale=(0.060,0.022,0), tex_id="SCALE: ")) 
+        self.letter.append(Letter(self, pos=(12,41.7,0), bg_col=(29/255, 120/255, 116/255), scale=(0.050,0.022,0), tex_id="NAME: "))
+        self.letter.append(Letter(self, pos=(6.15,35,0), bg_col=(0.1,0.13,0.2), scale=(0.100,0.022,0), tex_id="POSITION: ")) 
+        self.letter.append(Letter(self, pos=(6.15,31,0), bg_col=(0.1,0.13,0.2), scale=(0.100,0.022,0), tex_id="ROTATION: ")) 
+        self.letter.append(Letter(self, pos=(9.64,27,0), bg_col=(0.1,0.13,0.2), scale=(0.060,0.022,0), tex_id="SCALE: ")) 
+        self.letter.append(Letter(self, pos=(9.64,23,0), bg_col=(0.1,0.13,0.2), scale=(0.060,0.022,0), tex_id="COLOR: ")) 
+        self.letter.append(Letter(self, pos=(7.5,19,0), bg_col=(0.1,0.13,0.2), scale=(0.080,0.022,0), tex_id="TEXTURE: ")) 
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))

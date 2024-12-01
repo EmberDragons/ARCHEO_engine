@@ -6,12 +6,13 @@ class Mesh:
         self.vao = VAO(app.ctx)
         self.texture = Texture(app)
     
-    def load_texture_obj(self, name, link=None, load_letters = False):
-        if load_letters == False:
-            self.vao.load_vao(name)
+    def load_texture_obj(self, name, link=None):
+        self.vao.load_vao(name)
         if link != None:
-            self.texture.load_texture_obj(name, link, load_letters)
+            self.texture.load_texture_obj(name, link)
 
+    def load_texture_letter(self, text, col, bg_col):  
+        self.texture.load_texture_letter(text, col, bg_col)
     def destroy(self):
         self.vao.destroy()
         self.texture.destroy()

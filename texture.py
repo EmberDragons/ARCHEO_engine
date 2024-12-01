@@ -10,11 +10,10 @@ class Texture:
         self.textures[1] = self.get_texture(path='img/glass.jpg')
         self.textures[2] = self.get_texture(path='img/white.png')
     
-    def load_texture_obj(self, name, link, load_letters = False):
-        if load_letters:
-            self.textures[link] = self.get_texture_letter(path=link)
-        else:
-            self.textures[name] = self.get_texture(path=link)
+    def load_texture_obj(self, name, link):
+        self.textures[name] = self.get_texture(path=link)
+    def load_texture_letter(self, text, col, bg_col):
+        self.textures[text] = self.get_texture_letter(text, col, bg_col)
 
     def get_texture(self,path):
         texture = pg.image.load(path).convert()
@@ -29,14 +28,14 @@ class Texture:
         texture.anisotropy = 32.0
         return texture
     
-    def get_texture_letter(self,path):
-        s_texture = self.drawText(path)
+    def get_texture_letter(self, text, color, bg_color):
+        s_texture = self.drawText(text, color, bg_color)
         s_texture = pg.transform.flip(s_texture, flip_x = True, flip_y = False)
         texture  = self.ctx.texture(size=s_texture.get_size(), components=3, data=pg.image.tostring(s_texture, 'RGB'))
         return texture
     
-    def drawText(self, text):
-        textSurface = self.app.font.render(text, True, (255, 255, 255, 255), (0, 0, 0, 0))
+    def drawText(self, text, color, bg_color):
+        textSurface = self.app.font.render(text, True, (color[0]*255,color[1]*255,color[2]*255, 255), (bg_color[0]*255, bg_color[1]*255, bg_color[2]*255, 0))
         return textSurface
     
     def destroy(self):

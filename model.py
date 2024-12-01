@@ -108,9 +108,9 @@ class UI(BaseModel):
         self.update()
 
 class Letter(BaseModel):
-    def __init__(self, app, pos=(0,0,0), col=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='letters'):
+    def __init__(self, app, pos=(0,0,0), col=(0,0,0), bg_col=(1,1,1), scale=(1,1,1), tex_id=0, vao_name='letters'):
         if type(tex_id) != int:
-            app.mesh.load_texture_obj(vao_name, tex_id, load_letters = True) #load both vao and tex
+            app.mesh.load_texture_letter(tex_id, col, bg_col) #load both vao and tex
         super().__init__(app, pos, (0,0,0), scale, tex_id, vao_name)
         self.color = glm.vec3(col)
         self.on_init()
