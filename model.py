@@ -15,6 +15,7 @@ class BaseModel:
         self.set_scale = set_scale
         self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
+        self.vao_name = vao_name
         self.vao = app.mesh.vao.vaos[vao_name]
         self.shader_program = self.vao.program
         self.camera = self.app.camera
@@ -100,19 +101,23 @@ class UI(BaseModel):
         self.shader_program['pos'].write(self.position)
         self.shader_program['scale'].write(self.scale)
         self.shader_program['color'].write(self.color)
-        self.shader_program['hit'].write(glm.float32(0.0))
-        if self.app.camera.selected_obj != None:
-            self.shader_program['hit'].write(glm.float32(1.0))
 
     def on_init(self):
         self.update()
 
 class Letter(BaseModel):
-    def __init__(self, app, pos=(0,0,0), col=(0,0,0), bg_col=(1,1,1), scale=(1,1,1), tex_id=0, vao_name='letters'):
+    def __init__(self, app, pos=(0,0,0), col=(0,0,0), bg_col=(1,1,1), scale=(1,1,1), tex_id=0, vao_name='letters', number=0):
+        #number allows us to know what it is going to show
         if type(tex_id) != int:
             app.mesh.load_texture_letter(tex_id, col, bg_col) #load both vao and tex
         super().__init__(app, pos, (0,0,0), scale, tex_id, vao_name)
         self.color = glm.vec3(col)
+        self.bg_color = glm.vec3(bg_col)
+
+        self.old_tex_id = "none yet but will be set in futur no worries"
+        self.presentation_tex = tex_id
+        self.number = number
+
         self.on_init()
 
     def update(self):
@@ -121,6 +126,25 @@ class Letter(BaseModel):
         self.shader_program['pos'].write(self.position)
         self.shader_program['scale'].write(self.scale)
         self.shader_program['color'].write(self.color)
+        self.update_writting()
+        
+        
+    def update_writting(self):
+        if self.app.camera.selected_obj != None:
+            if self.number == 1: 
+                self.tex_id = f"({round(self.app.camera.selected_obj.position.x,2)}, {round(self.app.camera.selected_obj.position.y,2)}, {round(self.app.camera.selected_obj.position.z,2)})"
+            if self.number == 2:
+                self.tex_id = f"({round(self.app.camera.selected_obj.rotation.x,2)}, {round(self.app.camera.selected_obj.rotation.y,2)}, {round(self.app.camera.selected_obj.rotation.z,2)})"
+            if self.number == 3:
+                self.tex_id = f"({round(self.app.camera.selected_obj.scale.x,2)}, {round(self.app.camera.selected_obj.scale.y,2)}, {round(self.app.camera.selected_obj.scale.z,2)})"
+            if self.number == 4:
+                self.tex_id = f"{self.app.camera.selected_obj.tex_id}"
+            if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
+                last_int = -len(self.tex_id)
+
+                self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.color, self.bg_color) #load both vao and tex
+                self.old_tex_id=self.tex_id
+                self.texture = self.app.mesh.texture.textures[self.presentation_tex[:last_int]+self.tex_id]
 
     def on_init(self):
         #texture part

@@ -73,12 +73,11 @@ class GraphicEngine:
         self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(4/255, 21/255, 31/255))) #background high
 
     def letter_set_up(self):
-        self.letter.append(Letter(self, pos=(12,41.7,0), bg_col=(29/255, 120/255, 116/255), scale=(0.050,0.022,0), tex_id="NAME: "))
-        self.letter.append(Letter(self, pos=(6.15,35,0), bg_col=(0.1,0.13,0.2), scale=(0.100,0.022,0), tex_id="POSITION: ")) 
-        self.letter.append(Letter(self, pos=(6.15,31,0), bg_col=(0.1,0.13,0.2), scale=(0.100,0.022,0), tex_id="ROTATION: ")) 
-        self.letter.append(Letter(self, pos=(9.64,27,0), bg_col=(0.1,0.13,0.2), scale=(0.060,0.022,0), tex_id="SCALE: ")) 
-        self.letter.append(Letter(self, pos=(9.64,23,0), bg_col=(0.1,0.13,0.2), scale=(0.060,0.022,0), tex_id="COLOR: ")) 
-        self.letter.append(Letter(self, pos=(7.5,19,0), bg_col=(0.1,0.13,0.2), scale=(0.080,0.022,0), tex_id="TEXTURE: ")) 
+        self.letter.append(Letter(self, pos=(5.4,41.7,0), bg_col=(29/255, 120/255, 116/255), scale=(0.120,0.022,0), tex_id="NAME:                      ", number=0))
+        self.letter.append(Letter(self, pos=(4.7,35,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="POSITION:                      ", number=1)) 
+        self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="ROTATION:                      ", number=2)) 
+        self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="SCALE:                             ", number=3)) 
+        self.letter.append(Letter(self, pos=(4.7,23,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="TEXTURE:                         ", number=4)) 
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
