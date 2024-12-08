@@ -9,6 +9,7 @@ class Texture:
         self.textures[0] = self.get_texture(path='img/brick.jpg')
         self.textures[1] = self.get_texture(path='img/glass.jpg')
         self.textures[2] = self.get_texture(path='img/white.png')
+        self.textures[3] = self.get_texture(path='img/icon.png')
     
     def load_texture_obj(self, name, link):
         self.textures[name] = self.get_texture(path=link)

@@ -10,12 +10,12 @@ class BaseModel:
         self.app = app
         self.original_pos = glm.vec3(pos)
         self.position = glm.vec3(pos)
-        self.rotation = glm.vec3(glm.radians(rot))
+        self.rotation = glm.vec3(rot)
         self.scale = glm.vec3(scale)
         self.set_scale = set_scale
         self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
-        self.vao_name = vao_name
+        self.name = vao_name
         self.vao = app.mesh.vao.vaos[vao_name]
         self.shader_program = self.vao.program
         self.camera = self.app.camera
@@ -29,9 +29,9 @@ class BaseModel:
         else:
             m_model = glm.translate(m_model, self.position)
 
-        m_model = glm.rotate(m_model, self.rotation.x, glm.vec3(1,0,0))
-        m_model = glm.rotate(m_model, self.rotation.y, glm.vec3(0,1,0))
-        m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0,0,1))
+        m_model = glm.rotate(m_model, glm.radians(self.rotation).x, glm.vec3(1,0,0))
+        m_model = glm.rotate(m_model, glm.radians(self.rotation).y, glm.vec3(0,1,0))
+        m_model = glm.rotate(m_model, glm.radians(self.rotation).z, glm.vec3(0,0,1))
         
         if self.set_scale:
             m_model = glm.scale(m_model, ((self.scale.x,self.scale.z,self.scale.y)/(app.mesh.vao.scales[-1]/2)))
@@ -92,17 +92,21 @@ class Cube(BaseModel):
         self.update()
 
 class UI(BaseModel):
-    def __init__(self, app, pos=(0,0,0), col=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='ui'):
+    def __init__(self, app, pos=(0,0,0), col=(1,1,1), scale=(1,1,1), tex_id=2, vao_name='ui'):
         super().__init__(app, pos, (0,0,0), scale, tex_id, vao_name)
+        self.texture = tex_id
         self.color = glm.vec3(col)
         self.on_init()
 
     def update(self):
+        self.texture.use()
         self.shader_program['pos'].write(self.position)
         self.shader_program['scale'].write(self.scale)
         self.shader_program['color'].write(self.color)
 
     def on_init(self):
+        self.texture = self.app.mesh.texture.textures[self.tex_id]
+        self.shader_program['u_texture_0'] = 0
         self.update()
 
 class Letter(BaseModel):
@@ -131,6 +135,8 @@ class Letter(BaseModel):
         
     def update_writting(self):
         if self.app.camera.selected_obj != None:
+            if self.number == 0: 
+                self.tex_id = f"{self.app.camera.selected_obj.name}"
             if self.number == 1: 
                 self.tex_id = f"({round(self.app.camera.selected_obj.position.x,2)}, {round(self.app.camera.selected_obj.position.y,2)}, {round(self.app.camera.selected_obj.position.z,2)})"
             if self.number == 2:
@@ -145,6 +151,7 @@ class Letter(BaseModel):
                 self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.color, self.bg_color) #load both vao and tex
                 self.old_tex_id=self.tex_id
                 self.texture = self.app.mesh.texture.textures[self.presentation_tex[:last_int]+self.tex_id]
+                self.shader_program['u_texture_0'] = 0
 
     def on_init(self):
         #texture part
@@ -199,5 +206,4 @@ class Object(BaseModel):
         #texture part
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0
-        self.texture.use()
         self.update()

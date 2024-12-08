@@ -1,8 +1,10 @@
 #imports
 import pygame as pg
+import tkinter as tk
 import moderngl as mgl
 import ctypes
 import copy
+import math
 
 from model import *
 from camera import *
@@ -47,9 +49,11 @@ class GraphicEngine:
         self.ui_set_up()
         self.letter = []
         self.letter_set_up()
+        self.button = []
+        self.button_set_up()
 
     def scene_set_up(self):
-        self.scene.append(Object(self, (0,0,10), (-90,0,0), scale=(2,1,2), vao_name = "20430_Cat_v1_NEW", tex_id="model/20430_cat_diff_v1.jpg"))
+        self.scene.append(Object(self, (0,0,10), (-90,0,0), scale=(2,2,2), vao_name = "20430_Cat_v1_NEW", tex_id="model/20430_cat_diff_v1.jpg"))
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
     
@@ -72,12 +76,26 @@ class GraphicEngine:
         self.ui.append(UI(self, pos=(3.32, 2.83,0), scale=(0.22,0.21,1.0), col=(0.1,0.13,0.2))) #background right under params
         self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(4/255, 21/255, 31/255))) #background high
 
+        self.ui.append(UI(self, pos=(45,34,0), scale=(0.02,0.027,0), tex_id=3)) #name modifier
+        self.ui.append(UI(self, pos=(45,28.6,0), scale=(0.02,0.027,0), tex_id=3)) #pos modifier
+        self.ui.append(UI(self, pos=(45,25.6,0), scale=(0.02,0.027,0), tex_id=3)) #rot modifier
+        self.ui.append(UI(self, pos=(45,22.6,0), scale=(0.02,0.027,0), tex_id=3)) #scale modifier
+        self.ui.append(UI(self, pos=(45,19.6,0), scale=(0.02,0.027,0), tex_id=3)) #tex modifier
+
     def letter_set_up(self):
-        self.letter.append(Letter(self, pos=(5.4,41.7,0), bg_col=(29/255, 120/255, 116/255), scale=(0.120,0.022,0), tex_id="NAME:                      ", number=0))
+        self.letter.append(Letter(self, pos=(4.7,41.7,0), bg_col=(29/255, 120/255, 116/255), scale=(0.150,0.022,0), tex_id="NAME:                    ", number=0))
         self.letter.append(Letter(self, pos=(4.7,35,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="POSITION:                      ", number=1)) 
         self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="ROTATION:                      ", number=2)) 
         self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="SCALE:                             ", number=3)) 
         self.letter.append(Letter(self, pos=(4.7,23,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="TEXTURE:                         ", number=4)) 
+
+    def button_set_up(self):
+        self.button.append(((45,34,0), (0.04,0.054,0), "name")) #button to change name => noice
+        self.button.append(((45,28.6,0), (0.04,0.054,0), "position")) #button to change pos => noice
+        self.button.append(((45,25.6,0), (0.04,0.054,0), "rotation")) #button to change rot => noice
+        self.button.append(((45,22.6,0), (0.04,0.054,0), "scale")) #button to change scale => noice
+        self.button.append(((45,19.6,0), (0.04,0.054,0), "texture")) #button to change tex => noice
+
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
@@ -93,7 +111,7 @@ class GraphicEngine:
         #clear framebuffer
         self.ctx.clear(color=(0.12,0.11,0.1)) #background color
 
-        #render letter first
+        #render letters/text first
         for id in range(len(self.letter)-1,-1,-1): #we must render them from last to first
             self.letter[id].render()
         
@@ -104,8 +122,6 @@ class GraphicEngine:
         for obj in self.scene:
             obj.render()
 
-        #text rendering
-        
         
         #swap buffers
         pg.display.flip()
@@ -123,11 +139,71 @@ class GraphicEngine:
             self.render()
             self.delta_time = self.clock.tick(120)
 
+    #others funcs
+    def openNewInputWindow(self, name):
+        def one_entry(column):
+            input_str.append(tk.Entry(newWindow))
+            input_str[-1].grid(row=1, column=column) #the actual input place
+        def multiple_entry(column):
+            input_str.append(tk.Entry(newWindow))
+            input_str[-1].insert(tk.END, '0')
+            input_str[-1].grid(row=1, column=column) #the actual input place
+        def func():
+            #button was pressed
+            if self.camera.selected_obj != None:
+                if name == "name":
+                    self.camera.selected_obj.name = input_str[0].get()
+                if name == "position":
+                    self.camera.selected_obj.position = glm.vec3(float(input_str[0].get()), float("0"+input_str[1].get()), float("0"+input_str[2].get()))
+                if name == "rotation":
+                    self.camera.selected_obj.rotation = glm.vec3(float("0"+input_str[0].get()), float("0"+input_str[1].get()), float("0"+input_str[2].get()))
+                if name == "scale":
+                    self.camera.selected_obj.scale = glm.vec3(float("0"+input_str[0].get()), float("0"+input_str[1].get()), float("0"+input_str[2].get()))
+                if name == "texture":
+                    self.camera.selected_obj.tex_id = input_str[0].get()
+                    to_int = True
+                    for caracters in self.camera.selected_obj.tex_id:
+                        if caracters not in [str(i) for i in range(10)]:
+                            to_int=False
+                    if to_int: #we check if the entered caracters are nbrs, if so we transform the tex_id type to int
+                        self.camera.selected_obj.tex_id = int(self.camera.selected_obj.tex_id)
+                self.camera.selected_obj.m_model = self.camera.selected_obj.get_model_matrix(self)
+                self.camera.selected_obj.on_init()
+            reset_button()
+        def reset_button():
+            newWindow.destroy()
+        # Toplevel object which will 
+        # be treated as a new window
+        newWindow = tk.Tk()
+    
+        # sets the title of the
+        # Toplevel widget
+        newWindow.title("Input")
+
+        input_str = []
+        if name == "name" or name == "texture":
+            newWindow.geometry("125x70")
+            tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
+            one_entry(0)
+        else:
+            newWindow.geometry("375x70")
+            tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
+            for i in range(3):
+                multiple_entry(i)
+
+        tk.Button(newWindow, 
+                        text="Enter",
+                        padx = 10, 
+                        command = func).grid(row=2) #button enter
+        newWindow.mainloop()   
+            
+
 
 if __name__ == "__main__":
     #window size
     user32 = ctypes.windll.user32
     screensize = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+
 
     #run game
     game = GraphicEngine(screensize)

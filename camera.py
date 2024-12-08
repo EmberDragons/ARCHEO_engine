@@ -107,10 +107,22 @@ class Camera():
         else:
             self.lock = False
 
-        #click on objects
+        #click on objects or uis
         if pg.mouse.get_pressed()[0]:
-            hit_obj = self.ray_dist(self.position)
-            self.selected_obj = hit_obj
+            #uis
+            mouse_pos = (((pg.mouse.get_pos()[0]/self.app.WIN_SIZE[0])-0.5)*51*2, ((pg.mouse.get_pos()[1]/self.app.WIN_SIZE[1])-0.5)*-38.1*2) #this is arbitrairy value, i miss sleep to much to think why (just don't mess with it plz)
+            button_used = False
+            for button in self.app.button:
+                size_x = button[0][0]*button[1][0]
+                size_y = button[0][1]*button[1][1]
+                if mouse_pos[0]>button[0][0] and mouse_pos[0]<button[0][0]+size_x: #in x right
+                    if mouse_pos[1]>button[0][1] and mouse_pos[1]<button[0][1]+size_y: #in x right
+                        self.app.openNewInputWindow(f"{button[2]}")
+                        button_used = True
+            #objs
+            if button_used == False:
+                hit_obj = self.ray_dist(self.position)
+                self.selected_obj = hit_obj
 
     
     def ray_dist(self, point):
