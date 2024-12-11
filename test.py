@@ -1,10 +1,4 @@
-def function(c):
-    d={}
-    l=c.split(' ')
-    for mot in l:
-        d[mot] = len(mot)
-            
-    return d
-
-
-print(function("the cat was eating the mouse and time flying by like krazy"))
+d={'Gérard': 45, 'Dédé': 58, 'Ginette': 38}
+d[54]=0
+for i in d.items():
+    print(i)

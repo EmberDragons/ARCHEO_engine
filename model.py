@@ -152,6 +152,24 @@ class Letter(BaseModel):
                 self.old_tex_id=self.tex_id
                 self.texture = self.app.mesh.texture.textures[self.presentation_tex[:last_int]+self.tex_id]
                 self.shader_program['u_texture_0'] = 0
+        else:
+            if self.number == 0: 
+                self.tex_id = "None"
+            if self.number == 1: 
+                self.tex_id = "(0, 0, 0)"
+            if self.number == 2:
+                self.tex_id = "(0, 0, 0)"
+            if self.number == 3:
+                self.tex_id = "(0, 0, 0)"
+            if self.number == 4:
+                self.tex_id = "None"
+            if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
+                last_int = -len(self.tex_id)
+
+                self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.color, self.bg_color) #load both vao and tex
+                self.old_tex_id=self.tex_id
+                self.texture = self.app.mesh.texture.textures[self.presentation_tex[:last_int]+self.tex_id]
+                self.shader_program['u_texture_0'] = 0
 
     def on_init(self):
         #texture part

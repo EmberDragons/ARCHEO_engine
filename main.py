@@ -63,38 +63,40 @@ class GraphicEngine:
 
     def ui_set_up(self):
         #color palette for uis: 
-        # blue 0.12,0.2,0.3
-        # green deep 29, 120, 116
-        # dark 4, 21, 31
+        # light green 132, 169, 140
+        # middle green 82, 121, 111
+        # dark blue 53, 79, 82
+        # dark 47, 62, 70
         # white 242, 247, 242
-        # gray 112, 102, 119
+        # gray 202, 210, 197
+        # dark blue 20, 35, 43
         self.ui.append(UI(self, pos=(0,0,0), scale=(0.003,0.003,0.003), col=(1,1,1))) #crosshair
-        self.ui.append(UI(self, pos=(2.73,0,0), scale=(0.28,1.0,1.0), col=(4/255, 21/255, 31/255))) #background1 right window
-        self.ui.append(UI(self, pos=(2.97,0,0), scale=(0.25,1.0,1.0), col=(112/255, 102/255, 119/255))) #background2 right window
-        self.ui.append(UI(self, pos=(2.97,1.5,0), scale=(0.25,0.38,1.0), col=(0.12,0.2,0.3))) #background right window params
-        self.ui.append(UI(self, pos=(2.97,23.2,0), scale=(0.25,0.04,1.0), col=(29/255, 120/255, 116/255))) #background right window name
-        self.ui.append(UI(self, pos=(3.32, 2.83,0), scale=(0.22,0.21,1.0), col=(0.1,0.13,0.2))) #background right under params
-        self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(4/255, 21/255, 31/255))) #background high
+        self.ui.append(UI(self, pos=(2.73,0,0), scale=(0.28,1.0,1.0), col=(53/255, 79/255, 82/255))) #background1 right window
+        self.ui.append(UI(self, pos=(2.97,0,0), scale=(0.25,1.0,1.0), col=(47/255, 62/255, 70/255))) #background2 right window
+        self.ui.append(UI(self, pos=(2.97,1.5,0), scale=(0.25,0.38,1.0), col=(82/255, 121/255, 111/255))) #background right window params
+        self.ui.append(UI(self, pos=(2.97,23.2,0), scale=(0.25,0.04,1.0), col=(20/255, 35/255, 43/255))) #background right window name
+        self.ui.append(UI(self, pos=(3.32, 2.83,0), scale=(0.22,0.21,1.0), col=(82/255,121/255,111/255))) #background right under params
+        self.ui.append(UI(self, pos=(0,20,0), scale=(1.0,0.05,1.0), col=(47/255, 62/255, 70/255))) #background high
 
         self.ui.append(UI(self, pos=(45,34,0), scale=(0.02,0.027,0), tex_id=3)) #name modifier
-        self.ui.append(UI(self, pos=(45,28.6,0), scale=(0.02,0.027,0), tex_id=3)) #pos modifier
-        self.ui.append(UI(self, pos=(45,25.6,0), scale=(0.02,0.027,0), tex_id=3)) #rot modifier
-        self.ui.append(UI(self, pos=(45,22.6,0), scale=(0.02,0.027,0), tex_id=3)) #scale modifier
-        self.ui.append(UI(self, pos=(45,19.6,0), scale=(0.02,0.027,0), tex_id=3)) #tex modifier
+        self.ui.append(UI(self, pos=(45,28.4,0), scale=(0.02,0.027,0), tex_id=3)) #pos modifier
+        self.ui.append(UI(self, pos=(45,25.2,0), scale=(0.02,0.027,0), tex_id=3)) #rot modifier
+        self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #scale modifier
+        self.ui.append(UI(self, pos=(45,18.8,0), scale=(0.02,0.027,0), tex_id=3)) #tex modifier
 
     def letter_set_up(self):
-        self.letter.append(Letter(self, pos=(4.7,41.7,0), bg_col=(29/255, 120/255, 116/255), scale=(0.150,0.022,0), tex_id="NAME:                    ", number=0))
-        self.letter.append(Letter(self, pos=(4.7,35,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="POSITION:                      ", number=1)) 
-        self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="ROTATION:                      ", number=2)) 
-        self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="SCALE:                             ", number=3)) 
-        self.letter.append(Letter(self, pos=(4.7,23,0), bg_col=(0.1,0.13,0.2), scale=(0.150,0.022,0), tex_id="TEXTURE:                         ", number=4)) 
+        self.letter.append(Letter(self, pos=(4.7,41.7,0), bg_col=(20/255, 35/255, 43/255), scale=(0.150,0.022,0), tex_id="NAME:                    ", number=0))
+        self.letter.append(Letter(self, pos=(4.7,35,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="POSITION:                      ", number=1)) 
+        self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="ROTATION:                      ", number=2)) 
+        self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="SCALE:                             ", number=3)) 
+        self.letter.append(Letter(self, pos=(4.7,23,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="TEXTURE:                         ", number=4)) 
 
     def button_set_up(self):
         self.button.append(((45,34,0), (0.04,0.054,0), "name")) #button to change name => noice
-        self.button.append(((45,28.6,0), (0.04,0.054,0), "position")) #button to change pos => noice
-        self.button.append(((45,25.6,0), (0.04,0.054,0), "rotation")) #button to change rot => noice
-        self.button.append(((45,22.6,0), (0.04,0.054,0), "scale")) #button to change scale => noice
-        self.button.append(((45,19.6,0), (0.04,0.054,0), "texture")) #button to change tex => noice
+        self.button.append(((45,28.4,0), (0.04,0.054,0), "position")) #button to change pos => noice
+        self.button.append(((45,25.2,0), (0.04,0.054,0), "rotation")) #button to change rot => noice
+        self.button.append(((45,22,0), (0.04,0.054,0), "scale")) #button to change scale => noice
+        self.button.append(((45,18.8,0), (0.04,0.054,0), "texture")) #button to change tex => noice
 
 
     def light_set_up(self):
@@ -143,10 +145,23 @@ class GraphicEngine:
     def openNewInputWindow(self, name):
         def one_entry(column):
             input_str.append(tk.Entry(newWindow))
+            if self.camera.selected_obj != None:
+                if name == "name":
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.name))
+                if name == "texture":
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.tex_id))
             input_str[-1].grid(row=1, column=column) #the actual input place
         def multiple_entry(column):
             input_str.append(tk.Entry(newWindow))
-            input_str[-1].insert(tk.END, '0')
+            if self.camera.selected_obj != None:
+                if name == "position":
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.position[len(input_str)-1]))
+                if name == "rotation":
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.rotation[len(input_str)-1]))
+                if name == "scale":
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.scale[len(input_str)-1]))
+            else:
+                input_str[-1].insert(tk.END, '0')
             input_str[-1].grid(row=1, column=column) #the actual input place
         def func():
             #button was pressed
@@ -154,11 +169,11 @@ class GraphicEngine:
                 if name == "name":
                     self.camera.selected_obj.name = input_str[0].get()
                 if name == "position":
-                    self.camera.selected_obj.position = glm.vec3(float(input_str[0].get()), float("0"+input_str[1].get()), float("0"+input_str[2].get()))
+                    self.camera.selected_obj.position = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "rotation":
-                    self.camera.selected_obj.rotation = glm.vec3(float("0"+input_str[0].get()), float("0"+input_str[1].get()), float("0"+input_str[2].get()))
+                    self.camera.selected_obj.rotation = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "scale":
-                    self.camera.selected_obj.scale = glm.vec3(float("0"+input_str[0].get()), float("0"+input_str[1].get()), float("0"+input_str[2].get()))
+                    self.camera.selected_obj.scale = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "texture":
                     self.camera.selected_obj.tex_id = input_str[0].get()
                     to_int = True
