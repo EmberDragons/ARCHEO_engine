@@ -84,12 +84,25 @@ class GraphicEngine:
         self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #scale modifier
         self.ui.append(UI(self, pos=(45,18.8,0), scale=(0.02,0.027,0), tex_id=3)) #tex modifier
 
+        #importations/params
+        self.ui.append(UI(self, pos=(-17.13,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #quit
+        self.ui.append(UI(self, pos=(-14.75,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #save
+        self.ui.append(UI(self, pos=(-12.3,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #texture imports
+        self.ui.append(UI(self, pos=(-9.83,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #model imports
+
     def letter_set_up(self):
         self.letter.append(Letter(self, pos=(4.7,41.7,0), bg_col=(20/255, 35/255, 43/255), scale=(0.150,0.022,0), tex_id="NAME:                    ", number=0))
         self.letter.append(Letter(self, pos=(4.7,35,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="POSITION:                      ", number=1)) 
         self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="ROTATION:                      ", number=2)) 
         self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="SCALE:                             ", number=3)) 
         self.letter.append(Letter(self, pos=(4.7,23,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="TEXTURE:                         ", number=4)) 
+
+        #importations/params
+        self.letter.append(Letter(self, pos=(-18.87,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="QUIT")) #quit
+        self.letter.append(Letter(self, pos=(-16.2,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="SAVE")) #save
+        self.letter.append(Letter(self, pos=(-13.5,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="MODEL")) #texture imports
+        self.letter.append(Letter(self, pos=(-10.8,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="TEXT")) #model imports
+
 
     def button_set_up(self):
         self.button.append(((45,34,0), (0.04,0.054,0), "name")) #button to change name => noice

@@ -110,12 +110,13 @@ class UI(BaseModel):
         self.update()
 
 class Letter(BaseModel):
-    def __init__(self, app, pos=(0,0,0), col=(0,0,0), bg_col=(1,1,1), scale=(1,1,1), tex_id=0, vao_name='letters', number=0):
+    def __init__(self, app, pos=(0,0,0), col=(1,1,1), main_col=(0,0,0), bg_col=(1,1,1), scale=(1,1,1), tex_id=0, vao_name='letters', number=-1):
         #number allows us to know what it is going to show
         if type(tex_id) != int:
             app.mesh.load_texture_letter(tex_id, col, bg_col) #load both vao and tex
         super().__init__(app, pos, (0,0,0), scale, tex_id, vao_name)
-        self.color = glm.vec3(col)
+        self.main_color = glm.vec3(main_col)
+        self.letter_color = glm.vec3(col)
         self.bg_color = glm.vec3(bg_col)
 
         self.old_tex_id = "none yet but will be set in futur no worries"
@@ -129,7 +130,7 @@ class Letter(BaseModel):
 
         self.shader_program['pos'].write(self.position)
         self.shader_program['scale'].write(self.scale)
-        self.shader_program['color'].write(self.color)
+        self.shader_program['color'].write(self.main_color)
         self.update_writting()
         
         
@@ -148,7 +149,7 @@ class Letter(BaseModel):
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 
-                self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.color, self.bg_color) #load both vao and tex
+                self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.letter_color, self.bg_color) #load both vao and tex
                 self.old_tex_id=self.tex_id
                 self.texture = self.app.mesh.texture.textures[self.presentation_tex[:last_int]+self.tex_id]
                 self.shader_program['u_texture_0'] = 0
@@ -166,7 +167,7 @@ class Letter(BaseModel):
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 
-                self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.color, self.bg_color) #load both vao and tex
+                self.app.mesh.load_texture_letter(self.presentation_tex[:last_int]+self.tex_id, self.letter_color, self.bg_color) #load both vao and tex
                 self.old_tex_id=self.tex_id
                 self.texture = self.app.mesh.texture.textures[self.presentation_tex[:last_int]+self.tex_id]
                 self.shader_program['u_texture_0'] = 0

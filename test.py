@@ -1,4 +1,6 @@
-d={'Gérard': 45, 'Dédé': 58, 'Ginette': 38}
-d[54]=0
-for i in d.items():
+d={i:i**2 for i in range(1,10)}
+for i in d:
+    print(i)
+
+for i in d.values():
     print(i)
