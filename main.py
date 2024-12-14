@@ -111,6 +111,11 @@ class GraphicEngine:
         self.button.append(((45,22,0), (0.04,0.054,0), "scale")) #button to change scale => noice
         self.button.append(((45,18.8,0), (0.04,0.054,0), "texture")) #button to change tex => noice
 
+        
+        self.button.append(((-51,36,0),(0.110,0.07,0), "QUIT")) #quit
+        self.button.append(((-44,36,0),(0.122,0.07,0), "SAVE")) #save
+        self.button.append(((-37.3,36,0),(0.15,0.07,0), "MODEL")) #texture imports
+        self.button.append(((-30.5,36,0),(0.19,0.07,0), "TEXTURE")) #model imports
 
     def light_set_up(self):
         self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
@@ -118,7 +123,11 @@ class GraphicEngine:
 
     def add_light(self):
         pos = copy.deepcopy(self.camera.position)
-        self.lights.append(Light(pos,(110,120,80),0.5))
+        if len(self.lights)<20:
+            self.lights.append(Light(pos,(110,120,80),0.5))
+        else:
+            self.lights.pop(0)
+            self.lights.append(Light(pos,(110,120,80),0.5))
 
     
     def render(self):
@@ -207,12 +216,21 @@ class GraphicEngine:
         # sets the title of the
         # Toplevel widget
         newWindow.title("Input")
+        newWindow.wm_attributes("-topmost",True) #keep it on top
 
         input_str = []
         if name == "name" or name == "texture":
             newWindow.geometry("125x70")
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
             one_entry(0)
+
+
+#for the higher params
+        elif name=="QUIT":
+            self.mesh.destroy()
+            pg.quit()
+            sys.exit()
+        
         else:
             newWindow.geometry("375x70")
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part

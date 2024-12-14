@@ -113,10 +113,11 @@ class Camera():
             mouse_pos = (((pg.mouse.get_pos()[0]/self.app.WIN_SIZE[0])-0.5)*51*2, ((pg.mouse.get_pos()[1]/self.app.WIN_SIZE[1])-0.5)*-38.1*2) #this is arbitrairy value, i miss sleep to much to think why (just don't mess with it plz)
             button_used = False
             for button in self.app.button:
-                size_x = button[0][0]*button[1][0]
-                size_y = button[0][1]*button[1][1]
+                size_x = abs(button[0][0]*button[1][0])
+                size_y = abs(button[0][1]*button[1][1])
+                print(mouse_pos, button[0], size_x)
                 if mouse_pos[0]>button[0][0] and mouse_pos[0]<button[0][0]+size_x: #in x right
-                    if mouse_pos[1]>button[0][1] and mouse_pos[1]<button[0][1]+size_y: #in x right
+                    if mouse_pos[1]>button[0][1] and mouse_pos[1]<button[0][1]+size_y: #in y right
                         self.app.openNewInputWindow(f"{button[2]}")
                         button_used = True
             #objs
