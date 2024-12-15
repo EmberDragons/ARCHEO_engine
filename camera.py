@@ -115,7 +115,6 @@ class Camera():
             for button in self.app.button:
                 size_x = abs(button[0][0]*button[1][0])
                 size_y = abs(button[0][1]*button[1][1])
-                print(mouse_pos, button[0], size_x)
                 if mouse_pos[0]>button[0][0] and mouse_pos[0]<button[0][0]+size_x: #in x right
                     if mouse_pos[1]>button[0][1] and mouse_pos[1]<button[0][1]+size_y: #in y right
                         self.app.openNewInputWindow(f"{button[2]}")

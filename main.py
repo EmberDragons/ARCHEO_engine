@@ -165,6 +165,17 @@ class GraphicEngine:
 
     #others funcs
     def openNewInputWindow(self, name):
+        def import_entry(name, id):
+            input_str.append(tk.Entry(newWindow))
+            if name == "TEXTURE":
+                if id == 0:
+                    input_str[-1].insert(tk.END, "TEXTURE ACCESS NAME")
+                else:
+                    input_str[-1].insert(tk.END, "TEXTURE LINK")
+            if name == "MODEL":
+                if id == 0:
+                    input_str[-1].insert(tk.END, "NAME")
+            input_str[-1].grid(row=1+id, column=0) #the actual input place
         def one_entry(column):
             input_str.append(tk.Entry(newWindow))
             if self.camera.selected_obj != None:
@@ -206,13 +217,22 @@ class GraphicEngine:
                         self.camera.selected_obj.tex_id = int(self.camera.selected_obj.tex_id)
                 self.camera.selected_obj.m_model = self.camera.selected_obj.get_model_matrix(self)
                 self.camera.selected_obj.on_init()
+
+            #imports
+            if name == "TEXTURE":
+                print(True)
+                self.mesh.texture.load_texture_obj(f"{input_str[0].get()}", f"{input_str[1].get()}")
+            if name == "MODEL":
+                self.mesh.load_texture_obj(f"{input_str[0].get()}")
+                
             reset_button()
+
         def reset_button():
             newWindow.destroy()
         # Toplevel object which will 
         # be treated as a new window
         newWindow = tk.Tk()
-    
+        row_enter = 2
         # sets the title of the
         # Toplevel widget
         newWindow.title("Input")
@@ -224,13 +244,21 @@ class GraphicEngine:
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
             one_entry(0)
 
-
 #for the higher params
-        elif name=="QUIT":
+        elif name == "QUIT":
             self.mesh.destroy()
             pg.quit()
             sys.exit()
-        
+        elif name == "TEXTURE":
+            newWindow.geometry("125x90")
+            tk.Label(newWindow, text=f"{name}").grid(row=0) 
+            import_entry(name,0) #texture name
+            import_entry(name,1) #texture link
+            row_enter+=1
+        elif name == "MODEL":
+            newWindow.geometry("125x70")
+            tk.Label(newWindow, text=f"{name}").grid(row=0) 
+            import_entry(name,0) #texture name
         else:
             newWindow.geometry("375x70")
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
@@ -240,7 +268,7 @@ class GraphicEngine:
         tk.Button(newWindow, 
                         text="Enter",
                         padx = 10, 
-                        command = func).grid(row=2) #button enter
+                        command = func).grid(row=row_enter) #button enter
         newWindow.mainloop()   
             
 
