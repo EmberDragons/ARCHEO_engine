@@ -16,10 +16,19 @@ class BaseModel:
         self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
         self.name = vao_name
-        self.vao = app.mesh.vao.vaos[vao_name]
-        self.shader_program = self.vao.program
+        self.vao = self.app.mesh.vao.vaos[vao_name]
+        self.shader_program = self.vao.program 
         self.camera = self.app.camera
 
+    def on_init_vao(self, vao_name):
+        self.name = vao_name
+        self.vao = self.app.mesh.vao.vaos[vao_name]
+        self.shader_program = self.vao.program 
+        self.set_scale = True
+        if vao_name in ["cube", "pyramid"]:
+            self.set_scale = False
+        self.m_model = self.get_model_matrix(self.app)
+        
     def update(self): ...
 
     def get_model_matrix(self, app):
@@ -146,6 +155,8 @@ class Letter(BaseModel):
                 self.tex_id = f"({round(self.app.camera.selected_obj.scale.x,2)}, {round(self.app.camera.selected_obj.scale.y,2)}, {round(self.app.camera.selected_obj.scale.z,2)})"
             if self.number == 4:
                 self.tex_id = f"{self.app.camera.selected_obj.tex_id}"
+            if self.number == 5:
+                self.tex_id = f"{self.app.camera.selected_obj.name}"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 
@@ -163,6 +174,8 @@ class Letter(BaseModel):
             if self.number == 3:
                 self.tex_id = "(0, 0, 0)"
             if self.number == 4:
+                self.tex_id = "None"
+            if self.number == 5:
                 self.tex_id = "None"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)

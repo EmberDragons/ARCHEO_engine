@@ -53,14 +53,13 @@ class GraphicEngine:
         self.button_set_up()
 
     def scene_set_up(self):
-        self.scene.append(Object(self, (0,0,10), (-90,0,0), scale=(2,2,2), vao_name = "20430_Cat_v1_NEW", tex_id="model/20430_cat_diff_v1.jpg"))
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
     
     def add_cube(self):
         pos = copy.deepcopy(self.camera.position)
         self.scene.append(Cube(self, pos, tex_id=0))
-
+        
     def ui_set_up(self):
         #color palette for uis: 
         # light green 132, 169, 140
@@ -83,6 +82,7 @@ class GraphicEngine:
         self.ui.append(UI(self, pos=(45,25.2,0), scale=(0.02,0.027,0), tex_id=3)) #rot modifier
         self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #scale modifier
         self.ui.append(UI(self, pos=(45,18.8,0), scale=(0.02,0.027,0), tex_id=3)) #tex modifier
+        self.ui.append(UI(self, pos=(45,15.6,0), scale=(0.02,0.027,0), tex_id=3)) #tex modifier
 
         #importations/params
         self.ui.append(UI(self, pos=(-17.13,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #quit
@@ -96,6 +96,7 @@ class GraphicEngine:
         self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="ROTATION:                      ", number=2)) 
         self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="SCALE:                             ", number=3)) 
         self.letter.append(Letter(self, pos=(4.7,23,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="TEXTURE:                         ", number=4)) 
+        self.letter.append(Letter(self, pos=(4.7,19,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="V.A.O:                         ", number=5)) 
 
         #importations/params
         self.letter.append(Letter(self, pos=(-18.87,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="QUIT")) #quit
@@ -110,6 +111,7 @@ class GraphicEngine:
         self.button.append(((45,25.2,0), (0.04,0.054,0), "rotation")) #button to change rot => noice
         self.button.append(((45,22,0), (0.04,0.054,0), "scale")) #button to change scale => noice
         self.button.append(((45,18.8,0), (0.04,0.054,0), "texture")) #button to change tex => noice
+        self.button.append(((45,15.6,0), (0.04,0.054,0), "vao")) #button to change vao => noice
 
         
         self.button.append(((-51,36,0),(0.110,0.07,0), "QUIT")) #quit
@@ -183,6 +185,8 @@ class GraphicEngine:
                     input_str[-1].insert(tk.END, str(self.camera.selected_obj.name))
                 if name == "texture":
                     input_str[-1].insert(tk.END, str(self.camera.selected_obj.tex_id))
+                if name == "vao":
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.name))
             input_str[-1].grid(row=1, column=column) #the actual input place
         def multiple_entry(column):
             input_str.append(tk.Entry(newWindow))
@@ -201,6 +205,8 @@ class GraphicEngine:
             if self.camera.selected_obj != None:
                 if name == "name":
                     self.camera.selected_obj.name = input_str[0].get()
+                if name == "vao":
+                    self.camera.selected_obj.on_init_vao(input_str[0].get())
                 if name == "position":
                     self.camera.selected_obj.position = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "rotation":
@@ -239,7 +245,7 @@ class GraphicEngine:
         newWindow.wm_attributes("-topmost",True) #keep it on top
 
         input_str = []
-        if name == "name" or name == "texture":
+        if name == "name" or name == "texture" or name == "vao":
             newWindow.geometry("125x70")
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
             one_entry(0)
