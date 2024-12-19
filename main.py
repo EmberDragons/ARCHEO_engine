@@ -65,7 +65,7 @@ class GraphicEngine:
         
     def ui_set_up(self):
         #color palette for uis: 
-        # light green 132, 169, 140
+        # light self,green 132, 169, 140
         # middle green 82, 121, 111
         # dark blue 53, 79, 82
         # dark 47, 62, 70
@@ -107,7 +107,6 @@ class GraphicEngine:
         self.letter.append(Letter(self, pos=(-13.5,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="MODEL")) #texture imports
         self.letter.append(Letter(self, pos=(-10.8,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="TEXT")) #model imports
 
-
     def button_set_up(self):
         self.button.append(((45,34,0), (0.06,0.084,0), "name")) #button to change name => noice
         self.button.append(((45,28.4,0), (0.06,0.084,0), "position")) #button to change pos => noice
@@ -123,16 +122,15 @@ class GraphicEngine:
         self.button.append(((-30.5,36,0),(0.19,0.07,0), "TEXTURE")) #model imports
 
     def light_set_up(self):
-        self.lights.append(Light((4.5,-2,0),(10,190,110),0.7))
-        self.lights.append(Light((20,10,10),(110,120,80),10))
+        self.lights.append(Light(self,(4.5,-2,0),(10,190,110),0.7))
 
     def add_light(self):
         pos = copy.deepcopy(self.camera.position)
         if len(self.lights)<20:
-            self.lights.append(Light(pos,(110,120,80),0.5))
+            self.lights.append(Light(self,pos,(110,120,80),0.5))
         else:
             self.lights.pop(0)
-            self.lights.append(Light(pos,(110,120,80),0.5))
+            self.lights.append(Light(self,pos,(110,120,80),0.5))
 
     
     def render(self):
@@ -150,7 +148,9 @@ class GraphicEngine:
         #render scene
         for obj in self.scene:
             obj.render()
-
+        
+        for light in self.lights:
+            light.light_ui.render()
         
         #swap buffers
         pg.display.flip()

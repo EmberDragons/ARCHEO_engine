@@ -214,7 +214,7 @@ class Pyramid(BaseModel):
         self.update()
 
 class Object(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube', vao_link=''):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube', vao_link='cube'):
         self.tex_id = vao_name
         if type(tex_id) == int:
             app.mesh.load_texture_obj(vao_name, link=vao_link) #only load vao, no tex
@@ -233,6 +233,26 @@ class Object(BaseModel):
         self.shader_program['m_model'].write(self.m_model)
         #light
         self.buffer_lights()
+
+    def on_init(self):
+        #texture part
+        self.texture = self.app.mesh.texture.textures[self.tex_id]
+        self.shader_program['u_texture_0'] = 0
+        self.update()
+
+class Light(BaseModel):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(0.1,0.1,0.1), tex_id=2, vao_name='light'):
+        self.tex_id = tex_id
+        super().__init__(app, pos, rot, scale, self.tex_id, vao_name)
+        self.on_init()
+
+    def update(self):
+        self.texture.use()
+        #matrices
+        self.shader_program['m_proj'].write(self.camera.m_proj)
+        self.shader_program['m_view'].write(self.camera.m_view)
+        self.shader_program['m_model'].write(self.m_model)
+        self.shader_program['cam_pos'].write(self.camera.position)
 
     def on_init(self):
         #texture part
