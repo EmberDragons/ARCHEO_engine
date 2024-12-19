@@ -11,3 +11,6 @@ class Light():
 
     def create_ui(self):
         self.light_ui = model.Light(self.app,self.position)
+    
+    def update_light_attributes(self):
+        self.position = self.light_ui.position

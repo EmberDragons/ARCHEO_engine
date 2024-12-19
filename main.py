@@ -59,8 +59,7 @@ class GraphicEngine:
         self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
         self.scene.append(Cube(self, (6,0,0), tex_id=0))
     
-    def add_cube(self):
-        pos = copy.deepcopy(self.camera.position)
+    def add_cube(self, pos):
         self.scene.append(Cube(self, pos, tex_id=0))
         
     def ui_set_up(self):
@@ -123,9 +122,9 @@ class GraphicEngine:
 
     def light_set_up(self):
         self.lights.append(Light(self,(4.5,-2,0),(10,190,110),0.7))
+        self.lights.append(Light(self,(20,10,10),(110,120,80),10))
 
-    def add_light(self):
-        pos = copy.deepcopy(self.camera.position)
+    def add_light(self, pos):
         if len(self.lights)<20:
             self.lights.append(Light(self,pos,(110,120,80),0.5))
         else:
@@ -151,6 +150,7 @@ class GraphicEngine:
         
         for light in self.lights:
             light.light_ui.render()
+            light.update_light_attributes()
         
         #swap buffers
         pg.display.flip()

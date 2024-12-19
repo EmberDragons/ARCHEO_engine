@@ -95,9 +95,13 @@ class Camera():
                 pg.quit()
                 sys.exit()
             if event.type == pg.KEYDOWN and event.key == pg.K_1:
-                self.app.add_cube()
+                vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
+                new_pos = self.position+vector*3
+                self.app.add_cube(new_pos)
             if event.type == pg.KEYDOWN and event.key == pg.K_2:
-                self.app.add_light()
+                vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
+                new_pos = self.position+vector*3
+                self.app.add_light(new_pos)
 
         #screen movementa nd locking
         if pg.mouse.get_pressed()[2]:
@@ -123,7 +127,6 @@ class Camera():
             if button_used == False:
                 hit_obj = self.ray_dist(self.position)
                 self.selected_obj = hit_obj
-
     
     def ray_dist(self, point):
         #we need to use the raymarching approach to find the object we are looking at
@@ -133,7 +136,12 @@ class Camera():
 
         smallest_dist = 100
         new_point = point #the new point
-        for obj in self.app.scene:
+
+        #new list joining scene and lights
+        list_objs = self.app.scene
+        for light in self.app.lights:
+            list_objs.append(light.light_ui)
+        for obj in list_objs:
             dist = self.sdBox(obj.position, obj.scale, point)
             if dist <= min_return:
                 #hit
