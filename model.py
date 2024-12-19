@@ -214,13 +214,13 @@ class Pyramid(BaseModel):
         self.update()
 
 class Object(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube'):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube', vao_link=''):
         self.tex_id = vao_name
         if type(tex_id) == int:
-            app.mesh.load_texture_obj(vao_name) #only load vao, no tex
+            app.mesh.load_texture_obj(vao_name, link=vao_link) #only load vao, no tex
             self.tex_id=tex_id
         else:
-            app.mesh.load_texture_obj(vao_name, tex_id) #load both vao and tex
+            app.mesh.load_texture_obj(vao_name, tex_id, vao_link) #load both vao and tex
         super().__init__(app, pos, rot, scale, self.tex_id, vao_name, set_scale=True)
         self.on_init()
 

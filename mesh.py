@@ -6,10 +6,10 @@ class Mesh:
         self.vao = VAO(app.ctx)
         self.texture = Texture(app)
     
-    def load_texture_obj(self, name, link=None):
-        self.vao.load_vao(name)
-        if link != None:
-            self.texture.load_texture_obj(name, link)
+    def load_texture_obj(self, name, link_tex=None, link=None):
+        self.vao.load_vao(name, link)
+        if link_tex != None:
+            self.texture.load_texture_obj(name, link_tex)
 
     def load_texture_letter(self, text, col, bg_col):  
         self.texture.load_texture_letter(text, col, bg_col)

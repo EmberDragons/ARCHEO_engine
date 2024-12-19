@@ -28,9 +28,9 @@ class VAO:
             program = self.program.programs['letters'],
             vbo = self.vbo.vbos['letters'])
     
-    def load_vao(self, name):
+    def load_vao(self, name, link):
         #object vao
-        self.vbo.load_object(name) #we have created an instance of model
+        self.vbo.load_object(name, link) #we have created an instance of model
         self.vaos[name] = self.get_vao(
             program = self.program.programs['default'],
             vbo = self.vbo.vbos[name])

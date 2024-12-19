@@ -14,8 +14,10 @@ class VBO:
         self.vbos['ui'] = UIVBO(ctx)
         self.vbos['letters'] = LetterVBO(ctx)
 
-    def load_object(self, name):
-        self.vbos[name] = ObjectVBO(self.ctx, f"model/{name}.obj", self.vao)
+    def load_object(self, name, link=None):
+        if link == None:
+            link=name #second case senario
+        self.vbos[name] = ObjectVBO(self.ctx, f"{link}", self.vao)
 
     def destroy(self):
         [vbo.destroy() for vbo in self.vbos.values()]

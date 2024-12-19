@@ -1,41 +1,36 @@
-class Maillon():
-    def __init__(self, v=None, s=None):
-        self.v=v
-        self.s=s
-    def __str__(self):
-        if self.s!=None:
-            return f"{self.v}, {self.s}"
-        else:
-            return f"{self.v}"
+from tkinter import * 
+from tkinter import ttk, filedialog 
+from tkinter.filedialog import askopenfile 
+import os
 
-class Pile:
-    def __init__(self):
-        self.premier=None
+def main():
+    print(filepath)
     
-    def add(self, nb):
-        if self.premier==None:
-            self.premier=Maillon(nb)
-        else:
-            debut = self.premier
-            while debut.s!= None:
-                debut =debut.s
-            debut.s = Maillon(nb)
+# Create an instance of tkinter frame 
+win = Tk()
 
-    def remove(self):
-        debut=self.premier.v
-        self.premier=self.premier.s
-        return debut
-        
-    def __str__(self):
-        return "["+str(self.premier)+"]"
-    
-pile=Pile()
-pile.add(5)
-pile.add(34)
-pile.add(3)
-pile.add(4)
-pile.add(3344)
-print(pile)
-pile.remove()
-pile.remove()
-print(pile)
+# Set the geometry of tkinter frame 
+win.geometry("700x350")
+
+def open_file():
+    file = filedialog.askopenfile(mode='r', filetypes=[('PDF', '*.pdf')])    
+    if file:
+        global filepath
+        filepath = os.path.abspath(file.name)
+        quit()
+
+def quit():
+    win.destroy()
+
+
+# Add a Label widget 
+label = Label(win, text="Click the Button to browse the Files", font=('Georgia 13')) 
+label.pack(pady=10)
+
+# Create a Button 
+ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
+
+win.mainloop()
+
+if __name__ == '__main__':
+    main()

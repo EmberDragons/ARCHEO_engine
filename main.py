@@ -5,11 +5,14 @@ import moderngl as mgl
 import ctypes
 import copy
 import math
+import os
 
 from model import *
 from camera import *
 from lights import *
 from mesh import Mesh
+from tkinter import ttk, filedialog 
+from tkinter.filedialog import askopenfile 
 
 
 #classes
@@ -106,12 +109,12 @@ class GraphicEngine:
 
 
     def button_set_up(self):
-        self.button.append(((45,34,0), (0.04,0.054,0), "name")) #button to change name => noice
-        self.button.append(((45,28.4,0), (0.04,0.054,0), "position")) #button to change pos => noice
-        self.button.append(((45,25.2,0), (0.04,0.054,0), "rotation")) #button to change rot => noice
-        self.button.append(((45,22,0), (0.04,0.054,0), "scale")) #button to change scale => noice
-        self.button.append(((45,18.8,0), (0.04,0.054,0), "texture")) #button to change tex => noice
-        self.button.append(((45,15.6,0), (0.04,0.054,0), "vao")) #button to change vao => noice
+        self.button.append(((45,34,0), (0.06,0.084,0), "name")) #button to change name => noice
+        self.button.append(((45,28.4,0), (0.06,0.084,0), "position")) #button to change pos => noice
+        self.button.append(((45,25.2,0), (0.06,0.084,0), "rotation")) #button to change rot => noice
+        self.button.append(((45,22,0), (0.06,0.084,0), "scale")) #button to change scale => noice
+        self.button.append(((45,18.8,0), (0.06,0.084,0), "texture")) #button to change tex => noice
+        self.button.append(((45,15.6,0), (0.06,0.084,0), "vao")) #button to change vao => noice
 
         
         self.button.append(((-51,36,0),(0.110,0.07,0), "QUIT")) #quit
@@ -166,18 +169,34 @@ class GraphicEngine:
             self.delta_time = self.clock.tick(120)
 
     #others funcs
+
+
     def openNewInputWindow(self, name):
+        def open_file():
+            file = filedialog.askopenfile(mode='r', filetypes=[('OBJ', '*.obj')])    
+            if file:
+                input_str.append(f"{os.path.abspath(file.name)}")
+        def open_tex():
+            file = filedialog.askopenfile(mode='r', filetypes=[('PNJ, JPG', '*.png *.jpg')])    
+            if file:
+                input_str.append(f"{os.path.abspath(file.name)}")
+
         def import_entry(name, id):
-            input_str.append(tk.Entry(newWindow))
             if name == "TEXTURE":
                 if id == 0:
+                    input_str.append(tk.Entry(newWindow))
                     input_str[-1].insert(tk.END, "TEXTURE ACCESS NAME")
+                    input_str[-1].grid(row=1+id, column=0) #the actual input place
                 else:
-                    input_str[-1].insert(tk.END, "TEXTURE LINK")
+                    tk.Button(newWindow, padx=10, text="Browse TEX", command=open_tex).grid(row=row_enter) #button enter
             if name == "MODEL":
                 if id == 0:
-                    input_str[-1].insert(tk.END, "NAME")
-            input_str[-1].grid(row=1+id, column=0) #the actual input place
+                    input_str.append(tk.Entry(newWindow))
+                    input_str[-1].insert(tk.END, "OBJ ACCESS NAME")
+                    input_str[-1].grid(row=1+id, column=0) #the actual input place
+                else:
+                    tk.Button(newWindow, padx=10, text="Browse OBJ", command=open_file).grid(row=row_enter) #button enter
+            
         def one_entry(column):
             input_str.append(tk.Entry(newWindow))
             if self.camera.selected_obj != None:
@@ -226,10 +245,9 @@ class GraphicEngine:
 
             #imports
             if name == "TEXTURE":
-                print(True)
-                self.mesh.texture.load_texture_obj(f"{input_str[0].get()}", f"{input_str[1].get()}")
+                self.mesh.texture.load_texture_obj(f"{input_str[0].get()}", f"{input_str[1]}")
             if name == "MODEL":
-                self.mesh.load_texture_obj(f"{input_str[0].get()}")
+                self.mesh.load_texture_obj(f"{input_str[0].get()}",link_tex=None, link=f"{input_str[1]}")
                 
             reset_button()
 
@@ -262,9 +280,11 @@ class GraphicEngine:
             import_entry(name,1) #texture link
             row_enter+=1
         elif name == "MODEL":
-            newWindow.geometry("125x70")
+            newWindow.geometry("125x90")
             tk.Label(newWindow, text=f"{name}").grid(row=0) 
-            import_entry(name,0) #texture name
+            import_entry(name,0) #obj name
+            import_entry(name,1) #obj link
+            row_enter+=1
         else:
             newWindow.geometry("375x70")
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
