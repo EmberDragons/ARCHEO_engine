@@ -157,6 +157,10 @@ class Letter(BaseModel):
                 self.tex_id = f"{self.app.camera.selected_obj.tex_id}"
             if self.number == 5:
                 self.tex_id = f"{self.app.camera.selected_obj.name}"
+            if self.number == 6:
+                self.tex_id = f"({int(self.app.camera.selected_obj.color.x)}, {int(self.app.camera.selected_obj.color.y)}, {int(self.app.camera.selected_obj.color.z)})"
+            if self.number == 7:
+                self.tex_id = f"{self.app.camera.selected_obj.intensity}"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 
@@ -176,6 +180,10 @@ class Letter(BaseModel):
             if self.number == 4:
                 self.tex_id = "None"
             if self.number == 5:
+                self.tex_id = "None"
+            if self.number == 6:
+                self.tex_id = "(0, 0, 0)"
+            if self.number == 7:
                 self.tex_id = "None"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
@@ -241,8 +249,10 @@ class Object(BaseModel):
         self.update()
 
 class Light(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(0.1,0.1,0.1), tex_id=2, vao_name='light'):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(0.1,0.1,0.1), tex_id=2, vao_name='light', intensity = 1, color = (0,0,0)):
         self.tex_id = tex_id
+        self.intensity = intensity
+        self.color = glm.vec3(color)
         super().__init__(app, pos, rot, scale, self.tex_id, vao_name)
         self.on_init()
 

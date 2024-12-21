@@ -116,17 +116,33 @@ class Camera():
             #uis
             mouse_pos = (((pg.mouse.get_pos()[0]/self.app.WIN_SIZE[0])-0.5)*51*2, ((pg.mouse.get_pos()[1]/self.app.WIN_SIZE[1])-0.5)*-38.1*2) #this is arbitrairy value, i miss sleep to much to think why (just don't mess with it plz)
             button_used = False
-            for button in self.app.button:
-                size_x = abs(button[0][0]*button[1][0])
-                size_y = abs(button[0][1]*button[1][1])
-                if mouse_pos[0]>button[0][0] and mouse_pos[0]<button[0][0]+size_x: #in x right
-                    if mouse_pos[1]>button[0][1] and mouse_pos[1]<button[0][1]+size_y: #in y right
-                        self.app.openNewInputWindow(f"{button[2]}")
-                        button_used = True
+            for id in range(len(self.app.button)-1,-1,-1): #we must render them from last to first
+                if self.app.type_params==0 and id <10 or self.app.type_params==0 and id >=12:
+                    size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
+                    size_y = abs(self.app.button[id][0][1]*self.app.button[id][1][1])
+                    if mouse_pos[0]>self.app.button[id][0][0] and mouse_pos[0]<self.app.button[id][0][0]+size_x: #in x right
+                        if mouse_pos[1]>self.app.button[id][0][1] and mouse_pos[1]<self.app.button[id][0][1]+size_y: #in y right
+                            self.app.openNewInputWindow(f"{self.app.button[id][2]}")
+                            button_used = True
+                if self.app.type_params==1 and id <6 or self.app.type_params==1 and id >=10:
+                    size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
+                    size_y = abs(self.app.button[id][0][1]*self.app.button[id][1][1])
+                    if mouse_pos[0]>self.app.button[id][0][0] and mouse_pos[0]<self.app.button[id][0][0]+size_x: #in x right
+                        if mouse_pos[1]>self.app.button[id][0][1] and mouse_pos[1]<self.app.button[id][0][1]+size_y: #in y right
+                            self.app.openNewInputWindow(f"{self.app.button[id][2]}")
+                            button_used = True
             #objs
             if button_used == False:
                 hit_obj = self.ray_dist(self.position)
                 self.selected_obj = hit_obj
+                #change the params
+                list_lights = []
+                for light in self.app.lights:
+                    list_lights.append(light.light_ui)
+                if hit_obj in list_lights:
+                    self.app.type_params = 1
+                else:
+                    self.app.type_params = 0
     
     def ray_dist(self, point):
         #we need to use the raymarching approach to find the object we are looking at
