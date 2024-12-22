@@ -92,6 +92,7 @@ class Camera():
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 self.app.mesh.destroy()
+                self.app.scene_renderer.destroy()
                 pg.quit()
                 sys.exit()
             if event.type == pg.KEYDOWN and event.key == pg.K_1:
@@ -116,6 +117,7 @@ class Camera():
             #uis
             mouse_pos = (((pg.mouse.get_pos()[0]/self.app.WIN_SIZE[0])-0.5)*51*2, ((pg.mouse.get_pos()[1]/self.app.WIN_SIZE[1])-0.5)*-38.1*2) #this is arbitrairy value, i miss sleep to much to think why (just don't mess with it plz)
             button_used = False
+            #the type_params is for when we select a light or an object (to not render all textes at once)
             for id in range(len(self.app.button)-1,-1,-1): #we must render them from last to first
                 if self.app.type_params==0 and id <10 or self.app.type_params==0 and id >=12:
                     size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
@@ -133,7 +135,8 @@ class Camera():
                             button_used = True
             #objs
             if button_used == False:
-                hit_obj = self.ray_dist(self.position)
+                vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
+                hit_obj = self.ray_dist(self.position, vector)
                 self.selected_obj = hit_obj
                 #change the params
                 list_lights = []
@@ -144,10 +147,10 @@ class Camera():
                 else:
                     self.app.type_params = 0
     
-    def ray_dist(self, point):
+    def ray_dist(self, point, vector):
         #we need to use the raymarching approach to find the object we are looking at
         # we know the safe dist is three :  _ _ _ we check new safe dist : _ if too small, we hit an object (raymarching approch)
-        min_return = 0.2
+        min_return = 0.25
         max_return = 100
 
         smallest_dist = 100
@@ -169,16 +172,16 @@ class Camera():
                 #we raymarch again
                 smallest_dist=dist
 
-        vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
         new_point = point+vector*smallest_dist
-        return self.ray_dist(new_point)
+        return self.ray_dist(new_point, vector)
 
     def sdBox(self, center, scale, point):
         dist_x = abs(point.x-center.x)
         dist_y = abs(point.y-center.y)
         dist_z = abs(point.z-center.z)
-        return (math.sqrt((max(dist_x-scale.x,0))**2 + (max(dist_y-scale.y,0))**2 + (max(dist_z-scale.z,0))**2))
+        return (math.sqrt((max(dist_x-scale.x,0))**2 + (max(dist_y-scale.z,0))**2 + (max(dist_z-scale.y,0))**2)) #we are using 2 diff system so y is z
     
+
     def vector_world(self, mouse_pos, mat_view, mat_projection, SCR_WIDTH, SCR_HEIGHT):
         x = (2 * mouse_pos[0]) / SCR_WIDTH - 1
         y = 1 - (2 * mouse_pos[1]) / SCR_HEIGHT

@@ -16,12 +16,13 @@ class BaseModel:
         self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
         self.name = vao_name
+        self.vao_name = vao_name
         self.vao = self.app.mesh.vao.vaos[vao_name]
         self.shader_program = self.vao.program 
         self.camera = self.app.camera
 
     def on_init_vao(self, vao_name):
-        self.name = vao_name
+        self.vao_name = vao_name
         self.vao = self.app.mesh.vao.vaos[vao_name]
         self.shader_program = self.vao.program 
         self.set_scale = True
@@ -85,7 +86,7 @@ class Cube(BaseModel):
         self.on_init()
 
     def update(self):
-        self.texture.use()
+        self.texture.use(location = 0)
         #matrices
         self.shader_program['m_proj'].write(self.camera.m_proj)
         self.shader_program['m_view'].write(self.camera.m_view)
@@ -94,7 +95,26 @@ class Cube(BaseModel):
         #light
         self.buffer_lights()
 
+    def update_shadow(self):
+        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_model'].write(self.m_model)
+
+    def render_shadow(self):
+        self.update_shadow()
+        self.shadow_vao.render()
+
     def on_init(self):
+        #depth texture
+        self.depth_texture = self.app.mesh.texture.textures['depth_texture']
+        self.shader_program['shadowMap'] = 1
+        self.depth_texture.use(location=1)
+
+        #shadow
+        self.shadow_vao = self.app.mesh.vao.vaos['shadow_'+self.vao_name]
+        self.shadow_program=self.shadow_vao.program
+        self.shadow_program['m_proj'].write(self.camera.m_proj)
+        self.shadow_program['m_view_light'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_model'].write(self.m_model)
         #texture part
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0
@@ -156,7 +176,7 @@ class Letter(BaseModel):
             if self.number == 4:
                 self.tex_id = f"{self.app.camera.selected_obj.tex_id}"
             if self.number == 5:
-                self.tex_id = f"{self.app.camera.selected_obj.name}"
+                self.tex_id = f"{self.app.camera.selected_obj.vao_name}"
             if self.number == 6:
                 self.tex_id = f"({int(self.app.camera.selected_obj.color.x)}, {int(self.app.camera.selected_obj.color.y)}, {int(self.app.camera.selected_obj.color.z)})"
             if self.number == 7:
@@ -206,7 +226,7 @@ class Pyramid(BaseModel):
         self.on_init()
 
     def update(self):
-        self.texture.use()
+        self.texture.use(location = 0)
         #matrices
         self.shader_program['m_proj'].write(self.camera.m_proj)
         self.shader_program['m_view'].write(self.camera.m_view)
@@ -215,7 +235,25 @@ class Pyramid(BaseModel):
         #light
         self.buffer_lights()
 
+    def update_shadow(self):
+        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_model'].write(self.m_model)
+
+    def render_shadow(self):
+        self.update_shadow()
+        self.shadow_vao.render()
+
     def on_init(self):
+        #depth texture
+        self.depth_texture = self.app.mesh.texture.textures['depth_texture']
+        self.shader_program['shadowMap'] = 1
+        self.depth_texture.use(location=1)
+        #shadow
+        self.shadow_vao = self.app.mesh.vao.vaos['shadow_'+self.vao_name]
+        self.shadow_program=self.shadow_vao.program
+        self.shadow_program['m_proj'].write(self.camera.m_proj)
+        self.shadow_program['m_view_light'].write(self.camera.m_view_l)
+        self.shadow_program['m_model'].write(self.m_model)
         #texture part
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0
@@ -233,7 +271,7 @@ class Object(BaseModel):
         self.on_init()
 
     def update(self):
-        self.texture.use()
+        self.texture.use(location = 0)
         #matrices
         self.shader_program['m_proj'].write(self.camera.m_proj)
         self.shader_program['m_view'].write(self.camera.m_view)
@@ -242,7 +280,25 @@ class Object(BaseModel):
         #light
         self.buffer_lights()
 
+    def update_shadow(self):
+        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_model'].write(self.m_model)
+
+    def render_shadow(self):
+        self.update_shadow()
+        self.shadow_vao.render()
+
     def on_init(self):
+        #depth texture
+        self.depth_texture = self.app.mesh.texture.textures['depth_texture']
+        self.shader_program['shadowMap'] = 1
+        self.depth_texture.use(location=1)
+        #shadow
+        self.shadow_vao = self.app.mesh.vao.vaos['shadow_'+self.vao_name]
+        self.shadow_program=self.shadow_vao.program
+        self.shadow_program['m_proj'].write(self.camera.m_proj)
+        self.shadow_program['m_view_light'].write(self.camera.m_view_l)
+        self.shadow_program['m_model'].write(self.m_model)
         #texture part
         self.texture = self.app.mesh.texture.textures[self.tex_id]
         self.shader_program['u_texture_0'] = 0

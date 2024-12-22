@@ -8,6 +8,7 @@ class Shader_Program:
         self.programs['ui'] = self.get_program('ui')
         self.programs['letters'] = self.get_program('letters')
         self.programs['light'] = self.get_program('light_ui')
+        self.programs['shadow_map'] = self.get_program('shadow')
         
     def get_program(self, shader_name):
         with open(f'shaders/{shader_name}.vert') as file:

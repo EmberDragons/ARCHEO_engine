@@ -10,6 +10,7 @@ import os
 from model import *
 from camera import *
 from lights import *
+from scene_renderer import *
 from mesh import Mesh
 from tkinter import ttk, filedialog 
 from tkinter.filedialog import askopenfile 
@@ -43,6 +44,9 @@ class GraphicEngine:
         #mesh, vbo and vao set up
         self.mesh = Mesh(self) #contains the textures
 
+        #scene rendering program
+        self.scene_renderer = SceneRenderer(self)
+
         #scene and lights
         self.lights = []
         self.light_set_up()
@@ -59,8 +63,8 @@ class GraphicEngine:
         self.type_params = 0 #0 => obj nparams 1 => light params
 
     def scene_set_up(self):
-        self.scene.append(Cube(self, (-6,0,0), (90,90,0), (2,2,2), tex_id=1))
-        self.scene.append(Cube(self, (6,0,0), tex_id=0))
+        self.scene.append(Cube(self, (0,0,0), (0,0,0), (20,20,0.1), tex_id=1))
+        self.scene.append(Cube(self, (1,2,0), (0,0,0), (1,1,0.5),  tex_id=0))
     
     def add_cube(self, pos):
         self.scene.append(Cube(self, pos, tex_id=0))
@@ -139,16 +143,15 @@ class GraphicEngine:
         self.button.append(((45,22,0), (0.06,0.084,0), "scale")) #button to change scale => noice
         self.button.append(((45,18.8,0), (0.06,0.084,0), "texture")) #button to change tex => noice
         self.button.append(((45,15.6,0), (0.06,0.084,0), "vao")) #button to change vao => noice
-
+        
         #2
         self.button.append(((45,25.2,0), (0.06,0.084,0), "color")) #button to change col => noice
         self.button.append(((45,22,0), (0.06,0.084,0), "intensity")) #button to change intensity => noice
         
 
     def light_set_up(self):
-        self.lights.append(Light(self,(4.5,-2,0),(10,190,110),0.7))
-        self.lights.append(Light(self,(20,10,10),(110,120,80),10))
-
+        self.lights.append(Light(self,(0,10,2),(10,190,110),10)) #main light
+        
     def add_light(self, pos):
         if len(self.lights)<20:
             self.lights.append(Light(self,pos,(110,120,80),0.5))
@@ -175,11 +178,10 @@ class GraphicEngine:
                 self.ui[id].render()
             if self.type_params==1 and id <13 or self.type_params==1 and id >=17:
                 self.ui[id].render()
-
-        #render scene
-        for obj in self.scene:
-            obj.render()
         
+        #render every objs
+        self.scene_renderer.all_renders()
+
         for light in self.lights:
             light.light_ui.render()
             light.update_light_attributes()
@@ -237,7 +239,7 @@ class GraphicEngine:
                 if name == "texture":
                     input_str[-1].insert(tk.END, str(self.camera.selected_obj.tex_id))
                 if name == "vao":
-                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.name))
+                    input_str[-1].insert(tk.END, str(self.camera.selected_obj.vao_name))
                 if name == "intensity":
                     input_str[-1].insert(tk.END, str(self.camera.selected_obj.intensity))
             input_str[-1].grid(row=1, column=column) #the actual input place
@@ -312,6 +314,7 @@ class GraphicEngine:
 #for the higher params
         elif name == "QUIT":
             self.mesh.destroy()
+            self.scene_renderer.destroy()
             pg.quit()
             sys.exit()
         elif name == "TEXTURE":

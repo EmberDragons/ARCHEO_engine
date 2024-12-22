@@ -10,7 +10,14 @@ class Texture:
         self.textures[1] = self.get_texture(path='img/glass.jpg')
         self.textures[2] = self.get_texture(path='img/white.png')
         self.textures[3] = self.get_texture(path='img/icon.png')
+        self.textures['depth_texture']=self.get_depth_tex()
     
+    def get_depth_tex(self):
+        depth_texture = self.ctx.depth_texture(self.app.WIN_SIZE)
+        depth_texture.repeat_x = False
+        depth_texture.repeat_y = False
+        return depth_texture
+
     def load_texture_obj(self, name, link):
         self.textures[name] = self.get_texture(path=link)
     def load_texture_letter(self, text, col, bg_col):

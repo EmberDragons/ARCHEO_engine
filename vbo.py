@@ -226,14 +226,6 @@ class LightVBO(BaseVBO):
         super().__init__(ctx)
         self.format = '2f 3f'
         self.attrib = ['in_texcoord', 'in_position'] #herrrrreee all problems arise
-    
-    #get normals
-    def get_triangle_normal(self, a, b, c):
-        #return a vector3 normal to the plane formed by the 3 points
-        edge1 = b-a
-        edge2 = c-a
-        normal = glm.cross(edge1,edge2)
-        return normal
 
     @staticmethod
     def get_data(vertices, indices):

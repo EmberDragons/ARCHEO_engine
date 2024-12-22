@@ -5,13 +5,15 @@ layout (location = 1) in vec3 v_pos;
 layout (location = 2) in vec3 v_normals;
 layout (location = 3) in float rd_light_diffraction;
 layout (location = 4) in vec2 pixel_pos;
-
+in vec4 shadowCoord;
 
 out vec4 fragColor;
+
 
 uniform vec3 cam_pos;
 
 uniform sampler2D u_texture_0;
+uniform sampler2DShadow shadowMap;
 
 //matrices
 uniform mat4 m_proj;
@@ -23,8 +25,13 @@ uniform vec3 light_color[20];
 uniform float light_intensity[20];
 
 //light params
-float AMBIANT_LIGHT = 0.1;
+float AMBIANT_LIGHT = 0.06;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
+
+float getShadow(){
+    float shadow = textureProj(shadowMap, shadowCoord);
+    return shadow;
+}
 
 void main(){
     //lighting
@@ -55,14 +62,15 @@ void main(){
             if (dot(v_reflect_light,v_cam)>0){
                 SPECULAR_LIGHT = pow(dot(v_reflect_light,v_cam), 70); //multiplied to get a specular highlight
             }
-            TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT));
+            float shadow = getShadow();
+
+            TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT))*shadow;
         }
 
         iteration+=1;
     }
-
-    //combining all lights, with specular and diffuse
-    vec3 shading = TOTAL_SHADING_COLOR+ vec3(1,1,1)*AMBIANT_LIGHT;
+    vec3 shading = TOTAL_SHADING_COLOR + vec3(1,1,1)*AMBIANT_LIGHT;
+    
 
     //converting it to color with 255 as max
     vec3 raw_color = texture(u_texture_0, uv_0).rgb;
@@ -75,7 +83,6 @@ void main(){
     float gamma = 2.2;
     color=pow(color, vec3(gamma));
     color=pow(color, vec3(1/gamma));
-
 
 
     fragColor = vec4(color, 1.0);

@@ -11,13 +11,19 @@ class VAO:
         self.program = Shader_Program(self.ctx)
         self.vaos={}
 
-        #cube vao set up 
+        #all vao set up 
         self.vaos['cube'] = self.get_vao(
             program = self.program.programs['default'],
+            vbo = self.vbo.vbos['cube'])
+        self.vaos['shadow_cube'] = self.get_vao(
+            program = self.program.programs['shadow_map'],
             vbo = self.vbo.vbos['cube'])
         
         self.vaos['pyramid'] = self.get_vao(
             program = self.program.programs['default'],
+            vbo = self.vbo.vbos['pyramid'])
+        self.vaos['shadow_pyramid'] = self.get_vao(
+            program = self.program.programs['shadow_map'],
             vbo = self.vbo.vbos['pyramid'])
         
         self.vaos['ui'] = self.get_vao(
@@ -38,10 +44,13 @@ class VAO:
         self.vaos[name] = self.get_vao(
             program = self.program.programs['default'],
             vbo = self.vbo.vbos[name])
+        self.vaos['shadow_'+name] = self.get_vao(
+            program = self.program.programs['shadow_map'],
+            vbo = self.vbo.vbos[name])
     
     
     def get_vao(self, program, vbo):
-        vao = self.ctx.vertex_array(program, [(vbo.vbo, vbo.format, *vbo.attrib)])
+        vao = self.ctx.vertex_array(program, [(vbo.vbo, vbo.format, *vbo.attrib)], skip_errors = True)
         return vao
     
     def destroy(self):
