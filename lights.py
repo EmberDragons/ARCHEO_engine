@@ -29,4 +29,6 @@ class Light():
     def get_view_mat(self):
         return glm.lookAt(self.position, self.direction, glm.vec3(0,1,0))
     def get_proj_mat(self):
-        return glm.ortho(-100,100,-100,100,0.1,100)
+        #with near = 0.1 and far = 100
+        #wtf is wrong with this (ans : idk) return glm.perspective(glm.radians(90),1.0,0.1, 100)
+        return glm.ortho(-100,100,-100,100,0.1,100) #directional light ig

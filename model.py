@@ -191,7 +191,7 @@ class Letter(BaseModel):
             if self.number == 7:
                 self.tex_id = f"{self.app.camera.selected_obj.intensity}"
             if self.number == 8:
-                self.tex_id = f"{self.app.fps}"
+                self.tex_id = f"{round(self.app.fps,0)}"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 

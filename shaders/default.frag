@@ -24,12 +24,34 @@ uniform vec3 light_pos[20]; //max number of lights is 10
 uniform vec3 light_color[20];
 uniform float light_intensity[20];
 
+//tex depth params
+vec2 tex_shadow_size = vec2(8192,8192);
+
+
 //light params
 float AMBIANT_LIGHT = 0.06;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
+
+float getPixelShade(int ox, int oy){
+    float shadow = textureProj(shadowMap, shadowCoord+vec4(ox/tex_shadow_size.x,oy/tex_shadow_size.y,0,0));
+    return shadow;
+}
+
+float getSampleX9(){
+    int nb_sample = 9;
+    float total_Shade = 0.0;
+    for (int i = 0; i<=nb_sample; i++){
+        int size_x = i%3;
+        int size_y = i/3;
+
+        total_Shade+=getPixelShade(size_x, size_y);
+    }
+    return total_Shade/9.0;
+}
+
 float getShadow(){
-    float shadow = textureProj(shadowMap, shadowCoord);
+    float shadow = getSampleX9();
     return shadow;
 }
 
@@ -54,7 +76,7 @@ void main(){
         //we calculate the diffuse strength (basic intensity based on dot product)
         vec3 v_vector_light = normalize(light_pos[iteration]-v_pos);
         if (dot(v_vector_light,v_normals)>0.002){ //don't add negative lighting
-            DIFFUSE_LIGHT += (1/(rd_light_diffraction+d_light*d_light)); //shading based on the distance and a small number
+            DIFFUSE_LIGHT += (1/(rd_light_diffraction+(d_light)*4)); //shading based on the distance and a small number
             DIFFUSE_LIGHT *= light_intensity[iteration]*dot(v_vector_light,v_normals); //multiplied by the light intensity and angle
 
             //specular touch (based on the angle with the light)

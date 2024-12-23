@@ -152,7 +152,7 @@ class GraphicEngine:
         
 
     def light_set_up(self):
-        self.lights.append(Light(self, (6,50,12), (230,220,200), 70, name = "sun")) #main light
+        self.lights.append(Light(self, (6,50,2), (230,220,200), 8, name = "sun")) #main light
         
     def add_light(self, pos):
         if len(self.lights)<20:
