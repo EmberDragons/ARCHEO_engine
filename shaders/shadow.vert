@@ -2,7 +2,7 @@
 
 layout(location = 2) in vec3 in_position;
 
-uniform mat4 m_proj;
+uniform mat4 m_proj; //THAT IS PROBLEM 
 uniform mat4 m_view_light;
 uniform mat4 m_model;
 

@@ -40,6 +40,7 @@ class GraphicEngine:
         self.clock = pg.time.Clock()
         self.time = 0
         self.delta_time = 0
+        self.fps = 0 
 
         #mesh, vbo and vao set up
         self.mesh = Mesh(self) #contains the textures
@@ -64,7 +65,7 @@ class GraphicEngine:
 
     def scene_set_up(self):
         self.scene.append(Cube(self, (0,0,0), (0,0,0), (20,20,0.1), tex_id=1))
-        self.scene.append(Cube(self, (1,2,0), (0,0,0), (1,1,0.5),  tex_id=0))
+        self.scene.append(Cube(self, (-11,10,0), (0,0,0), (1,1,1),  tex_id=0))
     
     def add_cube(self, pos):
         self.scene.append(Cube(self, pos, tex_id=0))
@@ -105,7 +106,7 @@ class GraphicEngine:
         #2
         self.ui.append(UI(self, pos=(45,25.2,0), scale=(0.02,0.027,0), tex_id=3)) #col modifier
         self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #intensity modifier
-
+        
 
     def letter_set_up(self):
         #importations/params
@@ -126,6 +127,7 @@ class GraphicEngine:
         #2
         self.letter.append(Letter(self, pos=(4.7,31,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="COLOR:                        ", number=6)) 
         self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="STRENGTH:                             ", number=7)) 
+        self.letter.append(Letter(self, pos=(-5.6,-44,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="FPS:                             ", number=8)) 
 
 
     def button_set_up(self):
@@ -150,7 +152,7 @@ class GraphicEngine:
         
 
     def light_set_up(self):
-        self.lights.append(Light(self,(0,10,2),(10,190,110),10)) #main light
+        self.lights.append(Light(self, (6,50,12), (230,220,200), 70, name = "sun")) #main light
         
     def add_light(self, pos):
         if len(self.lights)<20:
@@ -179,19 +181,20 @@ class GraphicEngine:
             if self.type_params==1 and id <13 or self.type_params==1 and id >=17:
                 self.ui[id].render()
         
-        #render every objs
-        self.scene_renderer.all_renders()
-
         for light in self.lights:
             light.light_ui.render()
             light.update_light_attributes()
+
+        #render every objs
+        self.scene_renderer.all_renders()
+
         
         #swap buffers
         pg.display.flip()
     
 
     def get_time(self):
-        self.time = pg.time.get_ticks()*0.001
+        self.time = pg.time.get_ticks()
 
     def run(self):
         #runs every frame and control the whole thinggy : => manager
@@ -201,6 +204,7 @@ class GraphicEngine:
             self.get_time()
             self.render()
             self.delta_time = self.clock.tick(120)
+            self.fps = self.clock.get_fps()
 
     #others funcs
 

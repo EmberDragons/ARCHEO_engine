@@ -13,7 +13,7 @@ class Texture:
         self.textures['depth_texture']=self.get_depth_tex()
     
     def get_depth_tex(self):
-        depth_texture = self.ctx.depth_texture(self.app.WIN_SIZE)
+        depth_texture = self.ctx.depth_texture((8192,8192))
         depth_texture.repeat_x = False
         depth_texture.repeat_y = False
         return depth_texture

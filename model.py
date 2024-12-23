@@ -6,7 +6,7 @@ import time
 from function import *
 
 class BaseModel:
-    def __init__(self, app, pos=(0,0,0), rot = (0,0,0), scale = (1,1,1), tex_id=0, vao_name='cube', set_scale=False):
+    def __init__(self, app, pos=(0,0,0), rot = (0,0,0), scale = (1,1,1), tex_id=0, vao_name='cube', set_scale=False, name = None):
         self.app = app
         self.original_pos = glm.vec3(pos)
         self.position = glm.vec3(pos)
@@ -15,7 +15,11 @@ class BaseModel:
         self.set_scale = set_scale
         self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
+
         self.name = vao_name
+        if name != None: # if we want a specific name from the start
+            self.name = name
+        
         self.vao_name = vao_name
         self.vao = self.app.mesh.vao.vaos[vao_name]
         self.shader_program = self.vao.program 
@@ -81,8 +85,8 @@ class BaseModel:
         self.vao.render()
 
 class Cube(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube'):
-        super().__init__(app, pos, rot, scale, tex_id, vao_name)
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube', name = None):
+        super().__init__(app, pos, rot, scale, tex_id, vao_name, name=name)
         self.on_init()
 
     def update(self):
@@ -96,8 +100,13 @@ class Cube(BaseModel):
         self.buffer_lights()
 
     def update_shadow(self):
-        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_proj'].write(self.app.lights[0].m_proj_l)
+        self.shadow_program['m_view_light'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_model'].write(self.m_model)
+
+        #base shader
+        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shader_program['m_proj_l'].write(self.app.lights[0].m_proj_l)
 
     def render_shadow(self):
         self.update_shadow()
@@ -112,7 +121,7 @@ class Cube(BaseModel):
         #shadow
         self.shadow_vao = self.app.mesh.vao.vaos['shadow_'+self.vao_name]
         self.shadow_program=self.shadow_vao.program
-        self.shadow_program['m_proj'].write(self.camera.m_proj)
+        self.shadow_program['m_proj'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_view_light'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_model'].write(self.m_model)
         #texture part
@@ -181,6 +190,8 @@ class Letter(BaseModel):
                 self.tex_id = f"({int(self.app.camera.selected_obj.color.x)}, {int(self.app.camera.selected_obj.color.y)}, {int(self.app.camera.selected_obj.color.z)})"
             if self.number == 7:
                 self.tex_id = f"{self.app.camera.selected_obj.intensity}"
+            if self.number == 8:
+                self.tex_id = f"{self.app.fps}"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 
@@ -205,6 +216,8 @@ class Letter(BaseModel):
                 self.tex_id = "(0, 0, 0)"
             if self.number == 7:
                 self.tex_id = "None"
+            if self.number == 8:
+                self.tex_id = f"{round(self.app.fps,0)}"
             if type(self.tex_id) != int and self.old_tex_id != self.tex_id:
                 last_int = -len(self.tex_id)
 
@@ -221,8 +234,8 @@ class Letter(BaseModel):
 
 
 class Pyramid(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='pyramid'):
-        super().__init__(app, pos, rot, scale, tex_id, vao_name)
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='pyramid', name=None):
+        super().__init__(app, pos, rot, scale, tex_id, vao_name, name=name)
         self.on_init()
 
     def update(self):
@@ -236,8 +249,13 @@ class Pyramid(BaseModel):
         self.buffer_lights()
 
     def update_shadow(self):
-        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_proj'].write(self.app.lights[0].m_view_l)
+        self.shader_program['m_view_light'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_model'].write(self.m_model)
+
+        #base shader
+        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shader_program['m_proj_l'].write(self.app.lights[0].m_proj_l)
 
     def render_shadow(self):
         self.update_shadow()
@@ -251,7 +269,7 @@ class Pyramid(BaseModel):
         #shadow
         self.shadow_vao = self.app.mesh.vao.vaos['shadow_'+self.vao_name]
         self.shadow_program=self.shadow_vao.program
-        self.shadow_program['m_proj'].write(self.camera.m_proj)
+        self.shadow_program['m_proj'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_view_light'].write(self.camera.m_view_l)
         self.shadow_program['m_model'].write(self.m_model)
         #texture part
@@ -260,14 +278,14 @@ class Pyramid(BaseModel):
         self.update()
 
 class Object(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube', vao_link='cube'):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(1,1,1), tex_id=0, vao_name='cube', vao_link='cube', name = None):
         self.tex_id = vao_name
         if type(tex_id) == int:
             app.mesh.load_texture_obj(vao_name, link=vao_link) #only load vao, no tex
             self.tex_id=tex_id
         else:
             app.mesh.load_texture_obj(vao_name, tex_id, vao_link) #load both vao and tex
-        super().__init__(app, pos, rot, scale, self.tex_id, vao_name, set_scale=True)
+        super().__init__(app, pos, rot, scale, self.tex_id, vao_name, set_scale=True, name=name)
         self.on_init()
 
     def update(self):
@@ -281,8 +299,13 @@ class Object(BaseModel):
         self.buffer_lights()
 
     def update_shadow(self):
-        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shadow_program['m_proj'].write(self.app.lights[0].m_view_l)
+        self.shader_program['m_view_light'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_model'].write(self.m_model)
+
+        #base shader
+        self.shader_program['m_view_l'].write(self.app.lights[0].m_view_l)
+        self.shader_program['m_proj_l'].write(self.app.lights[0].m_proj_l)
 
     def render_shadow(self):
         self.update_shadow()
@@ -296,7 +319,7 @@ class Object(BaseModel):
         #shadow
         self.shadow_vao = self.app.mesh.vao.vaos['shadow_'+self.vao_name]
         self.shadow_program=self.shadow_vao.program
-        self.shadow_program['m_proj'].write(self.camera.m_proj)
+        self.shadow_program['m_proj'].write(self.app.lights[0].m_view_l)
         self.shadow_program['m_view_light'].write(self.camera.m_view_l)
         self.shadow_program['m_model'].write(self.m_model)
         #texture part
@@ -305,11 +328,11 @@ class Object(BaseModel):
         self.update()
 
 class Light(BaseModel):
-    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(0.1,0.1,0.1), tex_id=2, vao_name='light', intensity = 1, color = (0,0,0)):
+    def __init__(self, app, pos=(0,0,0), rot=(0,0,0), scale=(0.1,0.1,0.1), tex_id=2, vao_name='light', intensity = 1, color = (0,0,0), name=None):
         self.tex_id = tex_id
         self.intensity = intensity
         self.color = glm.vec3(color)
-        super().__init__(app, pos, rot, scale, self.tex_id, vao_name)
+        super().__init__(app, pos, rot, scale, self.tex_id, vao_name, name = name)
         self.on_init()
 
     def update(self):

@@ -17,6 +17,7 @@ out vec4 shadowCoord;
 uniform mat4 m_proj;
 uniform mat4 m_view;
 uniform mat4 m_view_l;
+uniform mat4 m_proj_l;
 uniform mat4 m_model;
 
 uniform mat4 m_bias = mat4(
@@ -36,9 +37,9 @@ void main(){
     pixel_pos = vec2(gl_Position);
 
     //depth tex
-    mat4 shadowMVP = m_proj*m_view_l*m_model;
+    mat4 shadowMVP = m_proj_l*m_view_l*m_model;
     shadowCoord = m_bias*shadowMVP*vec4(in_position,1.0);
-    shadowCoord.z-=0.0005;
+    shadowCoord.z-=0.005;
     
     //lighting
     v_pos = vec3(m_model*vec4(in_position, 1.0)); 

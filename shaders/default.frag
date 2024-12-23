@@ -64,7 +64,7 @@ void main(){
             }
             float shadow = getShadow();
 
-            TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT))*shadow;
+            TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT))*((shadow));
         }
 
         iteration+=1;
