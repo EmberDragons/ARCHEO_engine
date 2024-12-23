@@ -39,7 +39,7 @@ void main(){
     //depth tex
     mat4 shadowMVP = m_proj_l*m_view_l*m_model;
     shadowCoord = m_bias*shadowMVP*vec4(in_position,1.0);
-    shadowCoord.z-=0.005;
+    shadowCoord.z-=0.00005;
     
     //lighting
     v_pos = vec3(m_model*vec4(in_position, 1.0)); 
