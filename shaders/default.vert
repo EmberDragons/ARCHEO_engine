@@ -11,12 +11,13 @@ out vec3 v_pos;
 out vec3 v_normals;
 out float rd_light_diffraction;
 out vec2 pixel_pos;
-out vec4 shadowCoord;
+out vec4 shadowCoord[6];
 
 //matrices
 uniform mat4 m_proj;
 uniform mat4 m_view;
-uniform mat4 m_view_l;
+
+uniform mat4 m_view_l[6];
 uniform mat4 m_proj_l;
 uniform mat4 m_model;
 
@@ -32,14 +33,17 @@ float random(vec2 st){
 }
 
 void main(){
+    
     uv_0 = vec2(1.0-in_texcoord);
     gl_Position = m_proj*m_view*m_model*vec4(in_position, 1.0);//vector4 for vertex pos
     pixel_pos = vec2(gl_Position);
 
-    //depth tex
-    mat4 shadowMVP = m_proj_l*m_view_l*m_model;
-    shadowCoord = m_bias*shadowMVP*vec4(in_position,1.0);
-    shadowCoord.z-=0.00005;
+    //depth textures
+    for (int i = 0; i<6 ; i++){
+        mat4 shadowMVP = m_proj_l*m_view_l[i]*m_model;
+        shadowCoord[i] = m_bias*shadowMVP*vec4(in_position,1.0);
+        shadowCoord[i].z-=0.005;
+    }
     
     //lighting
     v_pos = vec3(m_model*vec4(in_position, 1.0)); 

@@ -5,7 +5,7 @@ layout (location = 1) in vec3 v_pos;
 layout (location = 2) in vec3 v_normals;
 layout (location = 3) in float rd_light_diffraction;
 layout (location = 4) in vec2 pixel_pos;
-in vec4 shadowCoord;
+in vec4 shadowCoord[6];
 
 out vec4 fragColor;
 
@@ -13,7 +13,7 @@ out vec4 fragColor;
 uniform vec3 cam_pos;
 
 uniform sampler2D u_texture_0;
-uniform sampler2DShadow shadowMap;
+uniform sampler2DShadow shadowMap[6];
 
 //matrices
 uniform mat4 m_proj;
@@ -24,34 +24,23 @@ uniform vec3 light_pos[20]; //max number of lights is 10
 uniform vec3 light_color[20];
 uniform float light_intensity[20];
 
-//tex depth params
-vec2 tex_shadow_size = vec2(8192,8192);
-
 
 //light params
 float AMBIANT_LIGHT = 0.06;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
 
-float getPixelShade(int ox, int oy){
-    float shadow = textureProj(shadowMap, shadowCoord+vec4(ox/tex_shadow_size.x,oy/tex_shadow_size.y,0,0));
-    return shadow;
-}
-
-float getSampleX9(){
-    int nb_sample = 9;
-    float total_Shade = 0.0;
-    for (int i = 0; i<=nb_sample; i++){
-        int size_x = i%3;
-        int size_y = i/3;
-
-        total_Shade+=getPixelShade(size_x, size_y);
-    }
-    return total_Shade/9.0;
-}
-
 float getShadow(){
-    float shadow = getSampleX9();
+    float shadow = 1;
+    if (shadowCoord[0] == shadowCoord[1]) // we have a direct light
+    {
+        shadow = textureProj(shadowMap[0], shadowCoord[0]);
+    }
+    else{
+        for (int i =0;i<6;i++){
+            shadow *= textureProj(shadowMap[i], shadowCoord[i]);
+        }
+    }
     return shadow;
 }
 
@@ -65,7 +54,7 @@ void main(){
 
     //we iterate through all the lights in the scene (20 max for performance issues)
     int iteration = 0;
-    while (iteration<20) {
+    while (iteration<20 && light_intensity[iteration]!=0) {
         //base color light
         float r_col = light_color[iteration].r/255;
         float g_col = light_color[iteration].g/255;
@@ -86,7 +75,7 @@ void main(){
             }
             float shadow = getShadow();
 
-            TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT))*((shadow));
+            TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT))*(shadow);
         }
 
         iteration+=1;

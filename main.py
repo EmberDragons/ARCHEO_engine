@@ -45,12 +45,15 @@ class GraphicEngine:
         #mesh, vbo and vao set up
         self.mesh = Mesh(self) #contains the textures
 
-        #scene rendering program
-        self.scene_renderer = SceneRenderer(self)
+
 
         #scene and lights
         self.lights = []
         self.light_set_up()
+
+        #scene rendering program
+        self.scene_renderer = SceneRenderer(self)
+        
         self.scene = []
         self.scene_set_up()
         self.ui = []
@@ -59,6 +62,7 @@ class GraphicEngine:
         self.letter_set_up()
         self.button = []
         self.button_set_up()
+
 
         #ui
         self.type_params = 0 #0 => obj nparams 1 => light params
@@ -106,6 +110,7 @@ class GraphicEngine:
         #2
         self.ui.append(UI(self, pos=(45,25.2,0), scale=(0.02,0.027,0), tex_id=3)) #col modifier
         self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #intensity modifier
+        #self.ui.append(UI(self, pos=(1,1,0), scale=(0.5,0.5,0), tex_id="depth_texture")) #depth texture (debugging)
         
 
     def letter_set_up(self):
@@ -152,14 +157,15 @@ class GraphicEngine:
         
 
     def light_set_up(self):
-        self.lights.append(Light(self, (6,50,2), (230,220,200), 8, name = "sun")) #main light
+        #self.lights.append(Light(self, (10,40,2), (230,220,200), 12, name = "sun")) #main light
+        self.lights.append(Light(self, (0,50,2), (230,220,200), 8)) #main light
         
     def add_light(self, pos):
         if len(self.lights)<20:
-            self.lights.append(Light(self,pos,(110,120,80),0.5))
+            self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
         else:
-            self.lights.pop(0)
-            self.lights.append(Light(self,pos,(110,120,80),0.5))
+            self.lights.pop(1)
+            self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
 
     
     def render(self):

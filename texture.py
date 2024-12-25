@@ -10,13 +10,22 @@ class Texture:
         self.textures[1] = self.get_texture(path='img/glass.jpg')
         self.textures[2] = self.get_texture(path='img/white.png')
         self.textures[3] = self.get_texture(path='img/icon.png')
-        self.textures['depth_texture']=self.get_depth_tex()
+        self.textures['depth_texture']=[]
     
     def get_depth_tex(self):
-        depth_texture = self.ctx.depth_texture((8192,8192))
+        depth_texture = self.ctx.depth_texture((4096,4096))
         depth_texture.repeat_x = False
         depth_texture.repeat_y = False
         return depth_texture
+    
+    def get_cube_depth_tex(self):
+        cube_texture = []
+        for i in range(6):
+            #cube mapping => shadows
+            cube_texture.append(self.ctx.depth_texture((4096,4096)))
+            cube_texture[-1].repeat_x = False
+            cube_texture[-1].repeat_y = False
+        return cube_texture
 
     def load_texture_obj(self, name, link):
         self.textures[name] = self.get_texture(path=link)
@@ -47,4 +56,9 @@ class Texture:
         return textSurface
     
     def destroy(self):
-        [tex.release() for tex in self.textures.values()]
+        for tex in self.textures.values():
+            if type(tex) == list:
+                for i in range(len(tex)):
+                    tex[i].release()
+            else:
+                tex.release()

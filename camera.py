@@ -3,7 +3,7 @@ import pygame as pg
 import sys, os
 import math
 
-FOV = 60
+FOV = 70
 NEAR = 0.1
 FAR = 100
 SPEED = 0.01
