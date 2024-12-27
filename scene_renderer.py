@@ -33,7 +33,7 @@ class ShadowCubeMap():
         self.app = app
         #depth buffer / shadows
         self.app.mesh.texture.textures['depth_texture'].append(self.app.mesh.texture.get_cube_depth_tex())
-        self.depth_texture =  self.app.mesh.texture.textures['depth_texture'][0] # this is an array
+        self.depth_texture = self.app.mesh.texture.textures['depth_texture'][0] # this is an array
         """framebuffer"""
         self.depth_fbo = [self.app.ctx.framebuffer(
                 depth_attachment=self.depth_texture[i]

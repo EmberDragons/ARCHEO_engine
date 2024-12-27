@@ -1,11 +1,12 @@
 #version 410
+#define MAX_SIZE 6
 
 layout (location = 0) in vec2 uv_0;
 layout (location = 1) in vec3 v_pos;
 layout (location = 2) in vec3 v_normals;
 layout (location = 3) in float rd_light_diffraction;
 layout (location = 4) in vec2 pixel_pos;
-in vec4 shadowCoord[6];
+in vec4 shadowCoord[MAX_SIZE];
 
 out vec4 fragColor;
 
@@ -13,7 +14,8 @@ out vec4 fragColor;
 uniform vec3 cam_pos;
 
 uniform sampler2D u_texture_0;
-uniform sampler2DShadow shadowMap[6];
+uniform sampler2DShadow shadowMap[MAX_SIZE];
+uniform int number_mat;
 
 //matrices
 uniform mat4 m_proj;
@@ -29,19 +31,28 @@ uniform float light_intensity[20];
 float AMBIANT_LIGHT = 0.06;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
+vec2 size_tex = vec2(4096,4096);
+
+float getSample16X(int ind){
+    float shadow = 0;
+    for (int i = -8; i<=7; i++){
+        shadow+=textureProj(shadowMap[i],shadowCoord[ind]+vec4(i%4,int(i/4),0,0));
+    }
+    return shadow/16;
+}
 
 float getShadow(){
-    float shadow = 1;
-    if (shadowCoord[0] == shadowCoord[1]) // we have a direct light
-    {
-        shadow = textureProj(shadowMap[0], shadowCoord[0]);
-    }
-    else{
-        for (int i =0;i<6;i++){
-            shadow *= textureProj(shadowMap[i], shadowCoord[i]);
+    float shadow = 0;
+    if (number_mat == 6){
+        shadow+=1;
+        for (int i = 0; i<number_mat; i++){
+            shadow *= getSample16X(i);
         }
     }
-    return shadow;
+    else{
+        shadow += getSample16X(0);
+    }
+    return shadow/number_mat;
 }
 
 void main(){
