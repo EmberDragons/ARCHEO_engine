@@ -1,5 +1,5 @@
 #version 410
-#define MAX_SIZE 6
+#define MAX_SIZE 20
 
 layout (location = 0) in vec2 uv_0;
 layout (location = 1) in vec3 v_pos;
@@ -10,17 +10,19 @@ in vec4 shadowCoord[MAX_SIZE];
 
 out vec4 fragColor;
 
-
 uniform vec3 cam_pos;
 
 uniform sampler2D u_texture_0;
-uniform sampler2DShadow shadowMap[MAX_SIZE];
+uniform samplerCube shadowMap[MAX_SIZE];
 uniform int number_mat;
 
 //matrices
 uniform mat4 m_proj;
 uniform mat4 m_view;
 uniform mat4 m_model;
+
+//shadow mat
+
 
 uniform vec3 light_pos[20]; //max number of lights is 10
 uniform vec3 light_color[20];
@@ -32,11 +34,26 @@ float AMBIANT_LIGHT = 0.06;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
 vec2 size_tex = vec2(4096,4096);
+float far_plane = 100;
+
+float getShadowCoord(int i, int ox, int oy){
+    vec3 fragToLight = vec3(v_pos.x+ox, v_pos.y+oy, v_pos.z) - light_pos[0];
+
+    float closestDepth = texture(shadowMap[i], fragToLight).r;
+    closestDepth*=far_plane;
+
+    float currentDepth = length(fragToLight);
+
+    float shadow=currentDepth>closestDepth + 0.005 ? 0.0 : 1.0;
+    return shadow;
+}
 
 float getSample16X(int ind){
     float shadow = 0;
-    for (int i = -8; i<=7; i++){
-        shadow+=textureProj(shadowMap[i],shadowCoord[ind]+vec4(i%4,int(i/4),0,0));
+    for (int x = -2; x<=2; x++){
+        for (int y = -2; y<=2; y++){
+            shadow+=getShadowCoord(ind,x,y);
+        }
     }
     return shadow/16;
 }
@@ -44,15 +61,12 @@ float getSample16X(int ind){
 float getShadow(){
     float shadow = 0;
     if (number_mat == 6){
-        shadow+=1;
-        for (int i = 0; i<number_mat; i++){
-            shadow *= getSample16X(i);
-        }
+        shadow += getSample16X(0);
     }
     else{
         shadow += getSample16X(0);
     }
-    return shadow/number_mat;
+    return shadow;
 }
 
 void main(){

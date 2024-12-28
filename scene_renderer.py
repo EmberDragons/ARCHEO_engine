@@ -33,26 +33,25 @@ class ShadowCubeMap():
         self.app = app
         #depth buffer / shadows
         self.app.mesh.texture.textures['depth_texture'].append(self.app.mesh.texture.get_cube_depth_tex())
-        self.depth_texture = self.app.mesh.texture.textures['depth_texture'][0] # this is an array
+        self.depth_texture_cube = self.app.mesh.texture.textures['depth_texture'][0] # this is an array
         """framebuffer"""
         self.depth_fbo = [self.app.ctx.framebuffer(
-                depth_attachment=self.depth_texture[i]
+                depth_attachment = self.app.ctx.depth_texture(self.depth_texture_cube.size,self.depth_texture_cube.read(face=i))
         ) for i in range(6)]
 
     def render_depth(self):
         # Directions for the cube map faces
         for face_cube in range(6):
-
             self.depth_fbo[face_cube].clear()
             self.depth_fbo[face_cube].use()
 
             for obj in self.app.scene:
                 if obj.vao_name != "light":
                     obj.render_shadow(0, face_cube) #0 is the indice of the light we are currently on
-                
+
     def destroy(self):
-        for face_cube in range(6):
-            self.depth_fbo[face_cube].release() 
+        for i in range(6):
+            self.depth_fbo[i].release() 
 
 class ShadowMap():
     def __init__(self, app):

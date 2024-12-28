@@ -63,9 +63,22 @@ class GraphicEngine:
         self.button = []
         self.button_set_up()
 
-
         #ui
         self.type_params = 0 #0 => obj nparams 1 => light params
+
+        """tex_cube = self.ctx.depth_texture_cube((500,500))
+        tex = self.ctx.texture((500,500), components=4,data = tex_cube.read(face=0))
+
+        or
+
+        texs = [self.ctx.depth_texture((500,500)) for _ in range(6)]
+        tex_cube = self.ctx.depth_texture_cube((500,500))
+        tex_cube.write(face=0, data = texs[0].read())
+
+        yes i came up with that miself, 
+        so from a texture cube you can extract a texture (i didn't even find anythng on this on internet so yw)"""
+        
+
 
     def scene_set_up(self):
         self.scene.append(Cube(self, (0,0,0), (0,0,0), (20,20,0.1), tex_id=1))

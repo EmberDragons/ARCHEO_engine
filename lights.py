@@ -45,13 +45,14 @@ class Light():
     def set_point_view_mat(self):
         self.m_view_l = self.get_point_view_mat()
     def get_point_view_mat(self):
-        return [glm.lookAt(self.position, self.position+glm.vec3(1,0,0), glm.vec3(0,-1,0)),
-                glm.lookAt(self.position, self.position+glm.vec3(-1,0,0), glm.vec3(0,-1,0)),
-                glm.lookAt(self.position, self.position+glm.vec3(0,1,0), glm.vec3(0,0,1)),
-                glm.lookAt(self.position, self.position+glm.vec3(0,-1,0), glm.vec3(0,0,-1)),
-                glm.lookAt(self.position, self.position+glm.vec3(0,0,1), glm.vec3(0,-1,0)),
-                glm.lookAt(self.position, self.position+glm.vec3(0,0,-1), glm.vec3(0,-1,0)), 
+        pos = glm.vec3(self.position)
+        return [glm.lookAt(pos, pos+glm.vec3(1,0,0), glm.vec3(0,-1,0)),
+                glm.lookAt(pos, pos+glm.vec3(-1,0,0), glm.vec3(0,-1,0)),
+                glm.lookAt(pos, pos+glm.vec3(0,1,0), glm.vec3(0,0,1)),
+                glm.lookAt(pos, pos+glm.vec3(0,-1,0), glm.vec3(0,0,-1)),
+                glm.lookAt(pos, pos+glm.vec3(0,0,1), glm.vec3(0,-1,0)),
+                glm.lookAt(pos, pos+glm.vec3(0,0,-1), glm.vec3(0,-1,0)), 
         ]
     def get_point_proj_mat(self):
         #with near = 0.1 and far = 100
-        return glm.perspective(glm.radians(90),1,0.1,100) #point light ig
+        return glm.perspective(glm.radians(80),1,0.1,100) #point light ig

@@ -102,21 +102,14 @@ class Cube(BaseModel):
     def update_shadow(self, indice, face):
         self.shadow_program['m_proj'].write(self.app.lights[indice].m_proj_l)
         if face != -1:
-            for i in range(6):
-                self.depth_texture[i].use(location=1+i)
-            m_view = glm.array(self.app.lights[indice].m_view_l)
+            self.depth_texture.use(location=1)
             self.shadow_program['m_view_l'].write(self.app.lights[indice].m_view_l[face])
-            self.shader_program['m_view_l'].write(m_view.to_bytes())
         else:
             self.depth_texture.use(location=1)
-            m_view = glm.array([self.app.lights[0].m_view_l for _ in range(6)])
             self.shadow_program['m_view_l'].write(self.app.lights[indice].m_view_l)
-            self.shader_program['m_view_l'].write(m_view.to_bytes())
 
         self.shadow_program['m_model'].write(self.m_model)
 
-        #base shader
-        self.shader_program['m_proj_l'].write(self.app.lights[indice].m_proj_l)
 
     def render_shadow(self, indice, face):
         self.update_shadow(indice, face)
@@ -128,15 +121,12 @@ class Cube(BaseModel):
         self.shadow_program=self.shadow_vao.program
 
         self.depth_texture = self.app.mesh.texture.textures['depth_texture'][0]
-        self.shader_program['shadowMap'] = [1,2,3,4,5,6]
+        self.shader_program['shadowMap'] = [i for i in range(1,21)]
         
         if self.app.lights[0].type_of_light == 'point':
             self.shader_program['number_mat'] = 6
-            m_view = glm.array(self.app.lights[0].m_view_l)
             #depth texture
-            for i in range(6):
-                self.depth_texture[i].use(location=1+i)
-            self.shader_program['m_view_l'].write(m_view.to_bytes())
+            self.depth_texture.use(location=1)
             self.shadow_program['m_view_l'].write(self.app.lights[0].m_view_l[0])
         else:
             self.shader_program['number_mat'] = 1

@@ -6,7 +6,9 @@ uniform mat4 m_proj;
 uniform mat4 m_view_l;
 uniform mat4 m_model;
 
+flat out vec3 fragPositionLightSpace;
+
 void main(){
-    mat4 mvp = m_proj*m_view_l*m_model;
-    gl_Position = mvp * vec4(in_position,1.0);
+    fragPositionLightSpace = vec3(m_model * vec4(in_position,1.0));
+    gl_Position = m_proj * m_view_l * vec4(fragPositionLightSpace,1.0);
 }
