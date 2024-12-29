@@ -66,7 +66,7 @@ float getShadow(){
     else{
         shadow += getSample16X(0);
     }
-    return shadow;
+    return shadow/number_mat;
 }
 
 void main(){

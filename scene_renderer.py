@@ -1,4 +1,6 @@
 import glm
+import moderngl as mgl
+from OpenGL import GL
 
 class SceneRenderer:
     def __init__(self, app):
@@ -30,20 +32,33 @@ class SceneRenderer:
         self.shadowMap.destroy()
 class ShadowCubeMap():
     def __init__(self, app):
+        self.std_ctx = mgl.create_context(standalone=True)
         self.app = app
         #depth buffer / shadows
-        self.app.mesh.texture.textures['depth_texture'].append(self.app.mesh.texture.get_cube_depth_tex())
+        self.app.mesh.texture.textures['depth_texture'].append(self.app.mesh.texture.get_cube_depth_tex(self.std_ctx))
         self.depth_texture_cube = self.app.mesh.texture.textures['depth_texture'][0] # this is an array
         """framebuffer"""
-        self.depth_fbo = [self.app.ctx.framebuffer(
-                depth_attachment = self.app.ctx.depth_texture(self.depth_texture_cube.size,self.depth_texture_cube.read(face=i))
-        ) for i in range(6)]
+        self.depth_fbo = self.app.ctx.framebuffer(
+                depth_attachment = self.app.ctx.depth_texture((4096,4096))
+        )
+        self.depth_cubemap_id = self.depth_texture_cube.glo  # OpenGL texture ID
 
     def render_depth(self):
         # Directions for the cube map faces
         for face_cube in range(6):
-            self.depth_fbo[face_cube].clear()
-            self.depth_fbo[face_cube].use()
+            # Bind the framebuffer
+            GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.depth_fbo.glo)
+
+    # Attach the specific face of the cubemap as the depth attachment
+            GL.glFramebufferTexture2D(
+                GL.GL_FRAMEBUFFER,
+                GL.GL_DEPTH_ATTACHMENT,
+                GL.GL_TEXTURE_CUBE_MAP_POSITIVE_X + face_cube,  # Select the face
+                self.depth_cubemap_id,                          # The cubemap texture
+                0                                          # Mipmap level
+            )
+            self.depth_fbo.clear()
+            self.depth_fbo.use()
 
             for obj in self.app.scene:
                 if obj.vao_name != "light":
