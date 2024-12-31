@@ -46,12 +46,12 @@ class Light():
         self.m_view_l = self.get_point_view_mat()
     def get_point_view_mat(self):
         pos = glm.vec3(self.position)
-        return [glm.lookAt(pos, pos+glm.vec3(1,0,0), glm.vec3(0,-1,0)),
-                glm.lookAt(pos, pos+glm.vec3(-1,0,0), glm.vec3(0,-1,0)),
-                glm.lookAt(pos, pos+glm.vec3(0,1,0), glm.vec3(0,0,1)),
-                glm.lookAt(pos, pos+glm.vec3(0,-1,0), glm.vec3(0,0,-1)),
-                glm.lookAt(pos, pos+glm.vec3(0,0,1), glm.vec3(0,-1,0)),
-                glm.lookAt(pos, pos+glm.vec3(0,0,-1), glm.vec3(0,-1,0)), 
+        return [glm.lookAt(pos+glm.vec3(1,0,0), pos+glm.vec3(2,0,0), glm.vec3(0,-2,0)),
+                glm.lookAt(pos+glm.vec3(-1,0,0), pos+glm.vec3(-2,0,0), glm.vec3(0,-2,0)),
+                glm.lookAt(pos+glm.vec3(0,1,0), pos+glm.vec3(0,2,0), glm.vec3(0,0,2)),
+                glm.lookAt(pos+glm.vec3(0,-1,0), pos+glm.vec3(0,-2,0), glm.vec3(0,0,-2)),
+                glm.lookAt(pos+glm.vec3(0,0,1), pos+glm.vec3(0,0,2), glm.vec3(0,-2,0)),
+                glm.lookAt(pos+glm.vec3(0,0,-1), pos+glm.vec3(0,0,-2), glm.vec3(0,-2,0)), 
         ]
     def get_point_proj_mat(self):
         #with near = 0.1 and far = 100

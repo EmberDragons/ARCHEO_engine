@@ -53,7 +53,7 @@ class GraphicEngine:
 
         #scene rendering program
         self.scene_renderer = SceneRenderer(self)
-        
+
         self.scene = []
         self.scene_set_up()
         self.ui = []
@@ -63,22 +63,9 @@ class GraphicEngine:
         self.button = []
         self.button_set_up()
 
+
         #ui
         self.type_params = 0 #0 => obj nparams 1 => light params
-
-        """tex_cube = self.ctx.depth_texture_cube((500,500))
-        tex = self.ctx.texture((500,500), components=4,data = tex_cube.read(face=0))
-
-        or
-
-        texs = [self.ctx.depth_texture((500,500)) for _ in range(6)]
-        tex_cube = self.ctx.depth_texture_cube((500,500))
-        tex_cube.write(face=0, data = texs[0].read())
-
-        yes i came up with that miself, 
-        so from a texture cube you can extract a texture (i didn't even find anythng on this on internet so yw)"""
-        
-
 
     def scene_set_up(self):
         self.scene.append(Cube(self, (0,0,0), (0,0,0), (20,20,0.1), tex_id=1))
@@ -96,7 +83,7 @@ class GraphicEngine:
         # white 242, 247, 242
         # gray 202, 210, 197
         # dark blue 20, 35, 43
-
+        
         self.ui.append(UI(self, pos=(2.73,0,0), scale=(0.28,1.0,1.0), col=(53/255, 79/255, 82/255))) #background1 right window
         self.ui.append(UI(self, pos=(2.97,0,0), scale=(0.25,1.0,1.0), col=(47/255, 62/255, 70/255))) #background2 right window
         self.ui.append(UI(self, pos=(2.97,1.5,0), scale=(0.25,0.38,1.0), col=(82/255, 121/255, 111/255))) #background right window params
@@ -171,13 +158,13 @@ class GraphicEngine:
 
     def light_set_up(self):
         #self.lights.append(Light(self, (10,40,2), (230,220,200), 12, name = "sun")) #main light
-        self.lights.append(Light(self, (0,50,2), (230,220,200), 8)) #main light
+        self.lights.append(Light(self, (0,20,2), (230,220,200), 5, param = "point")) #main light
         
     def add_light(self, pos):
-        if len(self.lights)<20:
+        if len(self.lights)<10:
             self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
         else:
-            self.lights.pop(1)
+            self.lights.pop(0)
             self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
 
     

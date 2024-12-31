@@ -20,7 +20,7 @@ class Texture:
     
     def get_cube_depth_tex(self):
         cube_texture = []
-        for i in range(6):
+        for _ in range(6):
             #cube mapping => shadows
             cube_texture.append(self.ctx.depth_texture((4096,4096)))
             cube_texture[-1].repeat_x = False
@@ -59,10 +59,7 @@ class Texture:
         for tex in self.textures.values():
             if type(tex) == list:
                 for i in range(len(tex)):
-                    if type(tex[i]) == list:
-                        for y in range(len(tex[i])):
-                            tex[i][y].release()
-                    else:
-                        tex[i].release()
+                    for y in range(len(tex)):
+                        tex[i][y].release()
             else:
                 tex.release()

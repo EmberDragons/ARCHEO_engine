@@ -15,7 +15,6 @@ class BaseModel:
         self.set_scale = set_scale
         self.m_model = self.get_model_matrix(app)
         self.tex_id = tex_id
-
         self.name = vao_name
         if name != None: # if we want a specific name from the start
             self.name = name
@@ -64,7 +63,7 @@ class BaseModel:
             LIGHT_POS.append(light_pos)
             LIGHT_COL.append(light_col)
             LIGHT_INT.append(light_int)
-        while len(LIGHT_POS) < 20: #we have 20 lights max
+        while len(LIGHT_POS) < 10: #we have 20 lights max
             light_pos = (0,0,0)
             light_col = (0,0,0)
             light_int = 0
@@ -102,16 +101,21 @@ class Cube(BaseModel):
     def update_shadow(self, indice, face):
         self.shadow_program['m_proj'].write(self.app.lights[indice].m_proj_l)
         if face != -1:
-            m_view = np.array(self.app.lights[indice].m_view_l)
+            for i in range(6):
+                self.depth_texture[i].use(location=1+i)
+            m_view = glm.array(self.app.lights[indice].m_view_l)
             self.shadow_program['m_view_l'].write(self.app.lights[indice].m_view_l[face])
-            self.shader_program['m_view_l'].write(m_view)
+            self.shader_program['m_view_l'].write(m_view.to_bytes())
         else:
-            m_view = np.array([self.app.lights[0].m_view_l for _ in range(6)])
+            self.depth_texture.use(location=1)
+            m_view = glm.array([self.app.lights[0].m_view_l for _ in range(6)])
             self.shadow_program['m_view_l'].write(self.app.lights[indice].m_view_l)
-            self.shader_program['m_view_l'].write(m_view)
+            self.shader_program['m_view_l'].write(m_view.to_bytes())
 
         self.shadow_program['m_model'].write(self.m_model)
 
+        #base shader
+        self.shader_program['m_proj_l'].write(self.app.lights[indice].m_proj_l)
 
     def render_shadow(self, indice, face):
         self.update_shadow(indice, face)
@@ -123,21 +127,24 @@ class Cube(BaseModel):
         self.shadow_program=self.shadow_vao.program
 
         self.depth_texture = self.app.mesh.texture.textures['depth_texture'][0]
-        self.shader_program['shadowMap'] = [i for i in range(1,21)]
+        self.shader_program['shadowMap'] = [1,2,3,4,5,6]
         
         if self.app.lights[0].type_of_light == 'point':
-            m_view = np.array(self.app.lights[0].m_view_l)
+            self.shader_program['number_mat'] = 6
+            m_view = glm.array(self.app.lights[0].m_view_l)
             #depth texture
-            for i in range(len(self.depth_texture)):
+            for i in range(6):
                 self.depth_texture[i].use(location=1+i)
-            self.shader_program['m_view_l'].write(m_view)
+            self.shader_program['m_view_l'].write(m_view.to_bytes())
             self.shadow_program['m_view_l'].write(self.app.lights[0].m_view_l[0])
         else:
-            m_view = np.array([self.app.lights[0].m_view_l for _ in range(6)])
+            self.shader_program['number_mat'] = 1
+            m_view = glm.array([self.app.lights[0].m_view_l for _ in range(6)])
             #depth texture
             self.depth_texture.use(location=1)
-            self.shader_program['m_view_l'].write(m_view)
+            
             self.shadow_program['m_view_l'].write(self.app.lights[0].m_view_l)
+            self.shader_program['m_view_l'].write(m_view.to_bytes())
 
         self.shadow_program['m_proj'].write(self.camera.m_proj)
         self.shadow_program['m_model'].write(self.m_model)
