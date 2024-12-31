@@ -18,8 +18,13 @@ class Texture:
         depth_texture.repeat_y = False
         return depth_texture
     
-    def get_cube_depth_tex(self, ctx):
-        cube_texture = ctx.depth_texture_cube((4096,4096))
+    def get_cube_depth_tex(self):
+        cube_texture = []
+        for i in range(6):
+            #cube mapping => shadows
+            cube_texture.append(self.ctx.depth_texture((4096,4096)))
+            cube_texture[-1].repeat_x = False
+            cube_texture[-1].repeat_y = False
         return cube_texture
 
     def load_texture_obj(self, name, link):

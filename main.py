@@ -53,7 +53,7 @@ class GraphicEngine:
 
         #scene rendering program
         self.scene_renderer = SceneRenderer(self)
-
+        
         self.scene = []
         self.scene_set_up()
         self.ui = []
@@ -96,7 +96,7 @@ class GraphicEngine:
         # white 242, 247, 242
         # gray 202, 210, 197
         # dark blue 20, 35, 43
-        
+
         self.ui.append(UI(self, pos=(2.73,0,0), scale=(0.28,1.0,1.0), col=(53/255, 79/255, 82/255))) #background1 right window
         self.ui.append(UI(self, pos=(2.97,0,0), scale=(0.25,1.0,1.0), col=(47/255, 62/255, 70/255))) #background2 right window
         self.ui.append(UI(self, pos=(2.97,1.5,0), scale=(0.25,0.38,1.0), col=(82/255, 121/255, 111/255))) #background right window params
@@ -171,7 +171,7 @@ class GraphicEngine:
 
     def light_set_up(self):
         #self.lights.append(Light(self, (10,40,2), (230,220,200), 12, name = "sun")) #main light
-        self.lights.append(Light(self, (0,20,2), (230,220,200), 1, param = "point")) #main light
+        self.lights.append(Light(self, (0,50,2), (230,220,200), 8)) #main light
         
     def add_light(self, pos):
         if len(self.lights)<20:
