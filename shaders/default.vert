@@ -1,5 +1,5 @@
 #version 410
-#define MAX_SIZE 6
+#define MAX_SIZE 24
 
 //in
 layout (location = 0) in vec2 in_texcoord;
@@ -19,8 +19,9 @@ uniform mat4 m_proj;
 uniform mat4 m_view;
 
 uniform mat4 m_view_l[MAX_SIZE];
-uniform int number_mat;
-uniform mat4 m_proj_l;
+uniform int number_mat[4];
+uniform int number_lights;
+uniform mat4 m_proj_l[4];
 uniform mat4 m_model;
 
 uniform mat4 m_bias = mat4(
@@ -41,10 +42,14 @@ void main(){
     pixel_pos = vec2(gl_Position);
 
     //depth textures
-    for (int i = 0; i<number_mat; i++){
-        mat4 shadowMVP = m_proj_l*m_view_l[i]*m_model;
-        shadowCoord[i] = m_bias*shadowMVP*vec4(in_position,1.0);
-        shadowCoord[i].z-=0.005;
+    int nb = 0;
+    for (int y = 0; y<number_lights; y++){
+        for (int i = 0; i<number_mat[y]; i++){
+            mat4 shadowMVP = m_proj_l[y]*m_view_l[i+y*6]*m_model;
+            shadowCoord[i+nb] = m_bias*shadowMVP*vec4(in_position,1.0);
+            shadowCoord[i+nb].z-=0.005;
+        }
+        nb+=number_mat[y];
     }
     
     //lighting

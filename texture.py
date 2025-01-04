@@ -59,7 +59,10 @@ class Texture:
         for tex in self.textures.values():
             if type(tex) == list:
                 for i in range(len(tex)):
-                    for y in range(len(tex)):
-                        tex[i][y].release()
+                    if type(tex[i]) == list:
+                        for y in range(6):
+                            tex[i][y].release()
+                    else:
+                        tex[i].release()
             else:
                 tex.release()

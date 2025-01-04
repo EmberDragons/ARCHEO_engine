@@ -10,6 +10,8 @@ class Light():
         self.intensity = intensity
         self.create_ui()
 
+        self.indexe = len(self.app.lights)
+
         self.direction = glm.vec3(0,0,0)
         self.m_view_l = self.get_dir_view_mat()
         self.m_proj_l = self.get_dir_proj_mat()
@@ -18,7 +20,10 @@ class Light():
         if self.type_of_light == "point":
             self.m_view_l = self.get_point_view_mat()
             self.m_proj_l = self.get_point_proj_mat()
+        self.app.scene_renderer.add_shadow(param=param)
 
+    def destroy(self):
+        self.app.scene_renderer.remove_shadow(self.indexe)
 
     def create_ui(self):
         self.light_ui = model.Light(self.app,self.position, intensity=self.intensity, color=self.color, name = self.name)

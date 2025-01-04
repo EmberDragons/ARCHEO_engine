@@ -46,13 +46,13 @@ class GraphicEngine:
         self.mesh = Mesh(self) #contains the textures
 
 
+        #scene rendering program
+        self.scene_renderer = SceneRenderer(self)
 
         #scene and lights
         self.lights = []
         self.light_set_up()
 
-        #scene rendering program
-        self.scene_renderer = SceneRenderer(self)
 
         self.scene = []
         self.scene_set_up()
@@ -157,14 +157,15 @@ class GraphicEngine:
         
 
     def light_set_up(self):
-        #self.lights.append(Light(self, (10,40,2), (230,220,200), 12, name = "sun")) #main light
-        self.lights.append(Light(self, (0,20,2), (230,220,200), 5, param = "point")) #main light
+        self.lights.append(Light(self, (0,30,2), (230,220,200), 5, name ="sun")) #main light
+        self.lights.append(Light(self, (5,10,2), (230,220,200), 1, param="point"))
         
     def add_light(self, pos):
-        if len(self.lights)<10:
+        if len(self.lights)<4:
             self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
         else:
-            self.lights.pop(0)
+            l = self.lights.pop(1)
+            l.destroy()
             self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
 
     

@@ -1,5 +1,5 @@
 #version 410
-#define MAX_SIZE 6
+#define MAX_SIZE 24
 
 layout (location = 0) in vec2 uv_0;
 layout (location = 1) in vec3 v_pos;
@@ -15,20 +15,21 @@ uniform vec3 cam_pos;
 
 uniform sampler2D u_texture_0;
 uniform sampler2DShadow shadowMap[MAX_SIZE];
-uniform int number_mat;
+uniform int number_mat[4];
+uniform int number_lights;
 
 //matrices
 uniform mat4 m_proj;
 uniform mat4 m_view;
 uniform mat4 m_model;
 
-uniform vec3 light_pos[10]; //max number of lights is 10
-uniform vec3 light_color[10];
-uniform float light_intensity[10];
+uniform vec3 light_pos[4]; //max number of lights is 4
+uniform vec3 light_color[4];
+uniform float light_intensity[4];
 
 
 //light params
-float AMBIANT_LIGHT = 0.06;
+float AMBIANT_LIGHT = 0.04;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
 vec2 size_tex = vec2(4096,4096);
@@ -37,8 +38,8 @@ float getSample16X(int ind){
     float shadow = 0;
     for (int i = -8; i<=7; i++){
         vec4 pos = (shadowCoord[ind]+vec4((i%4)/size_tex.x,int(i/4)/size_tex.y,0,0));
-        if ((pos.x < 0 || pos.x >= size_tex.x) || (pos.y < 0 || pos.y >= size_tex.y)){
-            shadow=16;
+        if ((pos.x < 0 || pos.x > size_tex.x) || (pos.y < 0 || pos.y > size_tex.y)){
+            shadow+=1;
         }
         else{
             shadow+=textureProj(shadowMap[ind],shadowCoord[ind]+vec4((i%4)/size_tex.x,int(i/4)/size_tex.y,0,0));
@@ -48,18 +49,22 @@ float getSample16X(int ind){
     return shadow/16;
 }
 
-float getShadow(){
+float getShadow(int ind){
     float shadow = 0;
-    if (number_mat == 6){
+    int new_ind = 0;
+    for (int i = 0; i<ind; i++){
+        new_ind+=number_mat[i];
+    }
+    if (number_mat[ind] == 6){
         shadow+=1;
-        for (int i = 0; i<number_mat; i++){
-            shadow *= getSample16X(i);
+        for (int i = 0; i<number_mat[ind]; i++){
+            shadow *= getSample16X(i+new_ind);
         }
     }
     else{
-        shadow += getSample16X(0);
+        shadow += getSample16X(new_ind);
     }
-    return shadow/(number_mat);
+    return shadow;
 }
 
 void main(){
@@ -70,9 +75,9 @@ void main(){
 
     vec3 v_cam = normalize(cam_pos-v_pos); //vector3 for the cam vector
 
-    //we iterate through all the lights in the scene (20 max for performance issues)
+    //we iterate through all the lights in the scene (4 max for performance issues)
     int iteration = 0;
-    while (iteration<20 && light_intensity[iteration]!=0) {
+    while (iteration<4 && light_intensity[iteration]!=0) {
         //base color light
         float r_col = light_color[iteration].r/255;
         float g_col = light_color[iteration].g/255;
@@ -91,7 +96,7 @@ void main(){
             if (dot(v_reflect_light,v_cam)>0){
                 SPECULAR_LIGHT = pow(dot(v_reflect_light,v_cam), 70); //multiplied to get a specular highlight
             }
-            float shadow = getShadow();
+            float shadow = getShadow(iteration);
 
             TOTAL_SHADING_COLOR += (shade*((DIFFUSE_LIGHT*STRENGTH_DIFFUSE)+SPECULAR_LIGHT))*(shadow);
         }
