@@ -10,6 +10,7 @@ class Texture:
         self.textures[1] = self.get_texture(path='img/glass.jpg')
         self.textures[2] = self.get_texture(path='img/white.png')
         self.textures[3] = self.get_texture(path='img/icon.png')
+        self.textures[4] = self.get_texture(path='img/dest.png')
         self.textures['depth_texture']=[]
     
     def get_depth_tex(self):
@@ -22,7 +23,7 @@ class Texture:
         cube_texture = []
         for _ in range(6):
             #cube mapping => shadows
-            cube_texture.append(self.ctx.depth_texture((4096,4096)))
+            cube_texture.append(self.ctx.depth_texture((1024,1024)))
             cube_texture[-1].repeat_x = False
             cube_texture[-1].repeat_y = False
         return cube_texture

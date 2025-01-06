@@ -47,7 +47,7 @@ void main(){
         for (int i = 0; i<number_mat[y]; i++){
             mat4 shadowMVP = m_proj_l[y]*m_view_l[i+y*6]*m_model;
             shadowCoord[i+nb] = m_bias*shadowMVP*vec4(in_position,1.0);
-            shadowCoord[i+nb].z-=0.005;
+            shadowCoord[i+nb].z-=0.0055;
         }
         nb+=number_mat[y];
     }

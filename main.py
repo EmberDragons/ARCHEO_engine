@@ -110,6 +110,10 @@ class GraphicEngine:
         #2
         self.ui.append(UI(self, pos=(45,25.2,0), scale=(0.02,0.027,0), tex_id=3)) #col modifier
         self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #intensity modifier
+
+        self.ui.append(UI(self, pos=(48,34,0), scale=(0.02,0.027,0), tex_id=4)) #destroy 
+
+
         #self.ui.append(UI(self, pos=(1,1,0), scale=(0.5,0.5,0), tex_id="depth_texture")) #depth texture (debugging)
         
 
@@ -154,6 +158,9 @@ class GraphicEngine:
         #2
         self.button.append(((45,25.2,0), (0.06,0.084,0), "color")) #button to change col => noice
         self.button.append(((45,22,0), (0.06,0.084,0), "intensity")) #button to change intensity => noice
+
+
+        self.button.append(((48,34,0), (0.06,0.084,0), "destroy")) #button to change name => bad :C
         
 
     def light_set_up(self):
@@ -165,7 +172,7 @@ class GraphicEngine:
             self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
         else:
             l = self.lights.pop(1)
-            l.destroy()
+            l.delete()
             self.lights.append(Light(self,pos,(110,120,80),0.5, param = "point"))
 
     
@@ -302,7 +309,8 @@ class GraphicEngine:
                 self.mesh.texture.load_texture_obj(f"{input_str[0].get()}", f"{input_str[1]}")
             if name == "MODEL":
                 self.mesh.load_texture_obj(f"{input_str[0].get()}",link_tex=None, link=f"{input_str[1]}")
-                
+            
+
             reset_button()
 
         def reset_button():
@@ -322,6 +330,9 @@ class GraphicEngine:
             tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
             one_entry(0)
 
+#destroy button
+        elif name == "destroy":
+            self.camera.selected_obj.destroy()
 #for the higher params
         elif name == "QUIT":
             self.mesh.destroy()

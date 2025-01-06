@@ -33,16 +33,23 @@ float AMBIANT_LIGHT = 0.04;
 float STRENGTH_DIFFUSE = 13.0; //the diffuse has more impact
 
 vec2 size_tex = vec2(4096,4096);
+vec2 size_tex2 = vec2(1024,1024);
 
-float getSample16X(int ind){
+float getSample16X(int ind, bool isPoint){
     float shadow = 0;
     for (int i = -8; i<=7; i++){
         vec4 pos = (shadowCoord[ind]+vec4((i%4)/size_tex.x,int(i/4)/size_tex.y,0,0));
-        if ((pos.x < 0 || pos.x > size_tex.x) || (pos.y < 0 || pos.y > size_tex.y)){
+        vec4 pos2 = (shadowCoord[ind]+vec4((i%4)/size_tex2.x,int(i/4)/size_tex2.y,0,0));
+        if ((pos.x < 0 || pos.x > size_tex.x) || (pos.y < 0 || pos.y > size_tex.y) && isPoint == false|| (pos.x < 0 || pos.x > size_tex.x) || (pos.y < 0 || pos.y > size_tex.y) && isPoint){
             shadow+=1;
         }
         else{
-            shadow+=textureProj(shadowMap[ind],shadowCoord[ind]+vec4((i%4)/size_tex.x,int(i/4)/size_tex.y,0,0));
+            if (isPoint){
+                shadow+=textureProj(shadowMap[ind],shadowCoord[ind]+vec4((i%4)/size_tex2.x,int(i/4)/size_tex2.y,0,0));
+            }
+            else{
+                shadow+=textureProj(shadowMap[ind],shadowCoord[ind]+vec4((i%4)/size_tex.x,int(i/4)/size_tex.y,0,0));
+            }
         }
         
     }
@@ -58,13 +65,13 @@ float getShadow(int ind){
     if (number_mat[ind] == 6){
         shadow+=1;
         for (int i = 0; i<number_mat[ind]; i++){
-            shadow *= getSample16X(i+new_ind);
+            shadow *= getSample16X(i+new_ind, true);
         }
     }
     else{
-        shadow += getSample16X(new_ind);
+        shadow += getSample16X(new_ind, false);
     }
-    return shadow;
+    return shadow/6;
 }
 
 void main(){

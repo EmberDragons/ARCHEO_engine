@@ -17,8 +17,16 @@ class SceneRenderer:
         self.shadowMapList[indexe].destroy()
         self.shadowMapList.pop(indexe)
         depth_tex = self.app.mesh.texture.textures['depth_texture'].pop(indexe)
-        for elt in depth_tex:
-            elt.release()
+        if type(depth_tex) == list:
+            for elt in depth_tex:
+                elt.release()
+        else:
+            depth_tex.release()
+        
+        #we need to put everything back
+        for shadowMap in self.shadowMapList:
+            if shadowMap.indexe>=indexe:
+                shadowMap.indexe-=1
 
     def render_shadow(self):
         # Directions for the cube map faces

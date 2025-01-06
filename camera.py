@@ -157,7 +157,7 @@ class Camera():
         new_point = point #the new point
 
         #new list joining scene and lights
-        list_objs = self.app.scene
+        list_objs = self.app.scene.copy()
         for light in self.app.lights:
             list_objs.append(light.light_ui)
         for obj in list_objs:

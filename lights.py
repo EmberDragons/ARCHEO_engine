@@ -22,11 +22,20 @@ class Light():
             self.m_proj_l = self.get_point_proj_mat()
         self.app.scene_renderer.add_shadow(param=param)
 
-    def destroy(self):
+    def delete(self):
         self.app.scene_renderer.remove_shadow(self.indexe)
+        #we need to put everything back
+        for light in self.app.lights:
+            if light.indexe>=self.indexe:
+                light.indexe-=1
+
+
+    def destroy(self):
+        self.app.lights.pop(self.indexe)
+        self.delete()
 
     def create_ui(self):
-        self.light_ui = model.Light(self.app,self.position, intensity=self.intensity, color=self.color, name = self.name)
+        self.light_ui = model.Light(self.app,self,self.position, intensity=self.intensity, color=self.color, name = self.name)
     
     def update_light_attributes(self):
         if self.type_of_light == 'point':
@@ -60,4 +69,4 @@ class Light():
         ]
     def get_point_proj_mat(self):
         #with near = 0.1 and far = 100
-        return glm.perspective(glm.radians(80),1,0.1,100) #point light ig
+        return glm.perspective(glm.radians(100),1,0.1,100) #point light ig
