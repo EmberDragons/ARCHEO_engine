@@ -103,50 +103,49 @@ class Camera():
                 vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
                 new_pos = self.position+vector*3
                 self.app.add_light(new_pos)
+            if event.type == pg.MOUSEBUTTONDOWN:
+                #click on objects or uis
+                if pg.mouse.get_pressed()[0]:
+                    #uis
+                    mouse_pos = (((pg.mouse.get_pos()[0]/self.app.WIN_SIZE[0])-0.5)*51*2, ((pg.mouse.get_pos()[1]/self.app.WIN_SIZE[1])-0.5)*-38.1*2) #this is arbitrairy value, i miss sleep to much to think why (just don't mess with it plz)
+                    button_used = False
+                    #the type_params is for when we select a light or an object (to not render all textes at once)
+                    for id in range(len(self.app.button)-1,-1,-1): #we must render them from last to first
+                        if self.app.type_params==0 and id <10 or self.app.type_params==0 and id >=12:
+                            size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
+                            size_y = abs(self.app.button[id][0][1]*self.app.button[id][1][1])
+                            if mouse_pos[0]>self.app.button[id][0][0] and mouse_pos[0]<self.app.button[id][0][0]+size_x: #in x right
+                                if mouse_pos[1]>self.app.button[id][0][1] and mouse_pos[1]<self.app.button[id][0][1]+size_y: #in y right
+                                    self.app.openNewInputWindow(f"{self.app.button[id][2]}")
+                                    button_used = True
+                        if self.app.type_params==1 and id <6 or self.app.type_params==1 and id >=10:
+                            size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
+                            size_y = abs(self.app.button[id][0][1]*self.app.button[id][1][1])
+                            if mouse_pos[0]>self.app.button[id][0][0] and mouse_pos[0]<self.app.button[id][0][0]+size_x: #in x right
+                                if mouse_pos[1]>self.app.button[id][0][1] and mouse_pos[1]<self.app.button[id][0][1]+size_y: #in y right
+                                    self.app.openNewInputWindow(f"{self.app.button[id][2]}")
+                                    button_used = True
+                    #objs
+                    if button_used == False:
+                        vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
+                        hit_obj = self.ray_dist(self.position, vector)
+                        self.selected_obj = hit_obj
+                        #change the params
+                        list_lights = []
+                        for light in self.app.lights:
+                            list_lights.append(light.light_ui)
+                        if hit_obj in list_lights:
+                            self.app.type_params = 1
+                        else:
+                            self.app.type_params = 0
+            #screen movementa nd locking
+            if pg.mouse.get_pressed()[2]:
+                if self.lock == False:
+                    rel_x, rel_y=pg.mouse.get_rel() #なんで！！！ああああ wtf AHHHHHHH ps (me of the next day after lots of reste and break) : soooo, this only works thanks to thius line of code because it allows us to ignore the first frame when the mouse is moved (if it wasn't at the center of the screen ) so you welcome, have a nice day
+                self.lock = True
+            else:
+                self.lock = False
 
-        #screen movementa nd locking
-        if pg.mouse.get_pressed()[2]:
-            if self.lock == False:
-                rel_x, rel_y=pg.mouse.get_rel() #なんで！！！ああああ wtf AHHHHHHH ps (me of the next day after lots of reste and break) : soooo, this only works thanks to thius line of code because it allows us to ignore the first frame when the mouse is moved (if it wasn't at the center of the screen ) so you welcome, have a nice day
-            self.lock = True
-        else:
-            self.lock = False
-
-        #click on objects or uis
-        if pg.mouse.get_pressed()[0]:
-            #uis
-            mouse_pos = (((pg.mouse.get_pos()[0]/self.app.WIN_SIZE[0])-0.5)*51*2, ((pg.mouse.get_pos()[1]/self.app.WIN_SIZE[1])-0.5)*-38.1*2) #this is arbitrairy value, i miss sleep to much to think why (just don't mess with it plz)
-            button_used = False
-            #the type_params is for when we select a light or an object (to not render all textes at once)
-            for id in range(len(self.app.button)-1,-1,-1): #we must render them from last to first
-                if self.app.type_params==0 and id <10 or self.app.type_params==0 and id >=12:
-                    size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
-                    size_y = abs(self.app.button[id][0][1]*self.app.button[id][1][1])
-                    if mouse_pos[0]>self.app.button[id][0][0] and mouse_pos[0]<self.app.button[id][0][0]+size_x: #in x right
-                        if mouse_pos[1]>self.app.button[id][0][1] and mouse_pos[1]<self.app.button[id][0][1]+size_y: #in y right
-                            self.app.openNewInputWindow(f"{self.app.button[id][2]}")
-                            button_used = True
-                if self.app.type_params==1 and id <6 or self.app.type_params==1 and id >=10:
-                    size_x = abs(self.app.button[id][0][0]*self.app.button[id][1][0])
-                    size_y = abs(self.app.button[id][0][1]*self.app.button[id][1][1])
-                    if mouse_pos[0]>self.app.button[id][0][0] and mouse_pos[0]<self.app.button[id][0][0]+size_x: #in x right
-                        if mouse_pos[1]>self.app.button[id][0][1] and mouse_pos[1]<self.app.button[id][0][1]+size_y: #in y right
-                            self.app.openNewInputWindow(f"{self.app.button[id][2]}")
-                            button_used = True
-            #objs
-            if button_used == False:
-                vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
-                hit_obj = self.ray_dist(self.position, vector)
-                self.selected_obj = hit_obj
-                #change the params
-                list_lights = []
-                for light in self.app.lights:
-                    list_lights.append(light.light_ui)
-                if hit_obj in list_lights:
-                    self.app.type_params = 1
-                else:
-                    self.app.type_params = 0
-    
     def ray_dist(self, point, vector):
         #we need to use the raymarching approach to find the object we are looking at
         # we know the safe dist is three :  _ _ _ we check new safe dist : _ if too small, we hit an object (raymarching approch)

@@ -93,9 +93,9 @@ class GraphicEngine:
 
         #importations/params
         self.ui.append(UI(self, pos=(-17.13,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #quit
-        self.ui.append(UI(self, pos=(-14.75,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #save
-        self.ui.append(UI(self, pos=(-12.3,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #texture imports
+        self.ui.append(UI(self, pos=(-14.75,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #light
         self.ui.append(UI(self, pos=(-9.83,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #model imports
+        self.ui.append(UI(self, pos=(-7.45,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #texture imports
         self.ui.append(UI(self, pos=(0,0,0), scale=(0.003,0.003,0.003), col=(1,1,1))) #crosshair
 
         self.ui.append(UI(self, pos=(45,34,0), scale=(0.02,0.027,0), tex_id=3)) #name modifier
@@ -112,6 +112,7 @@ class GraphicEngine:
         self.ui.append(UI(self, pos=(45,22,0), scale=(0.02,0.027,0), tex_id=3)) #intensity modifier
 
         self.ui.append(UI(self, pos=(48,34,0), scale=(0.02,0.027,0), tex_id=4)) #destroy 
+        self.ui.append(UI(self, pos=(-12.3,42.3,0), scale=(0.055,0.023,0), tex_id=2)) #cube
 
 
         #self.ui.append(UI(self, pos=(1,1,0), scale=(0.5,0.5,0), tex_id="depth_texture")) #depth texture (debugging)
@@ -120,9 +121,9 @@ class GraphicEngine:
     def letter_set_up(self):
         #importations/params
         self.letter.append(Letter(self, pos=(-18.87,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="QUIT")) #quit
-        self.letter.append(Letter(self, pos=(-16.2,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="SAVE")) #save
-        self.letter.append(Letter(self, pos=(-13.5,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="MODEL")) #texture imports
-        self.letter.append(Letter(self, pos=(-10.8,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="TEXT")) #model imports
+        self.letter.append(Letter(self, pos=(-16.2,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="LIGHT")) #light
+        self.letter.append(Letter(self, pos=(-10.8,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="MODEL")) #texture imports
+        self.letter.append(Letter(self, pos=(-8.2,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="TEXT")) #model imports
 
         self.letter.append(Letter(self, pos=(4.7,41.7,0), bg_col=(20/255, 35/255, 43/255), scale=(0.150,0.022,0), tex_id="NAME:                    ", number=0))
         self.letter.append(Letter(self, pos=(4.7,35,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="POSITION:                      ", number=1)) 
@@ -138,12 +139,13 @@ class GraphicEngine:
         self.letter.append(Letter(self, pos=(4.7,27,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="STRENGTH:                             ", number=7)) 
         self.letter.append(Letter(self, pos=(-5.6,-44,0), bg_col=(47/255, 62/255, 70/255), scale=(0.150,0.022,0), tex_id="FPS:                             ", number=8)) 
 
+        self.letter.append(Letter(self, pos=(-13.5,48.7,0), bg_col=(1,1,1), col=(0,0,0), scale=(0.05,0.02,0), tex_id="CUBE")) #obj
 
     def button_set_up(self):
         self.button.append(((-51,36,0),(0.110,0.07,0), "QUIT")) #quit
-        self.button.append(((-44,36,0),(0.122,0.07,0), "SAVE")) #save
-        self.button.append(((-37.3,36,0),(0.15,0.07,0), "MODEL")) #texture imports
-        self.button.append(((-30.5,36,0),(0.19,0.07,0), "TEXTURE")) #model imports
+        self.button.append(((-44,36,0),(0.122,0.07,0), "LIGHT")) #light
+        self.button.append(((-30.8,36,0),(0.15,0.07,0), "MODEL")) #model imports
+        self.button.append(((-24.7,36,0),(0.19,0.07,0), "TEXTURE")) #model imports
 
 
         self.button.append(((45,34,0), (0.06,0.084,0), "name")) #button to change name => noice
@@ -161,6 +163,7 @@ class GraphicEngine:
 
 
         self.button.append(((48,34,0), (0.06,0.084,0), "destroy")) #button to change name => bad :C
+        self.button.append(((-37.3,36,0),(0.122,0.07,0), "CUBE")) #cube
         
 
     def light_set_up(self):
@@ -317,51 +320,63 @@ class GraphicEngine:
             newWindow.destroy()
         # Toplevel object which will 
         # be treated as a new window
-        newWindow = tk.Tk()
-        row_enter = 2
-        # sets the title of the
-        # Toplevel widget
-        newWindow.title("Input")
-        newWindow.wm_attributes("-topmost",True) #keep it on top
-
-        input_str = []
-        if name == "name" or name == "texture" or name == "vao" or name == "intensity":
-            newWindow.geometry("125x70")
-            tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
-            one_entry(0)
-
-#destroy button
-        elif name == "destroy":
-            self.camera.selected_obj.destroy()
-#for the higher params
-        elif name == "QUIT":
-            self.mesh.destroy()
-            self.scene_renderer.destroy()
-            pg.quit()
-            sys.exit()
-        elif name == "TEXTURE":
-            newWindow.geometry("125x90")
-            tk.Label(newWindow, text=f"{name}").grid(row=0) 
-            import_entry(name,0) #texture name
-            import_entry(name,1) #texture link
-            row_enter+=1
-        elif name == "MODEL":
-            newWindow.geometry("125x90")
-            tk.Label(newWindow, text=f"{name}").grid(row=0) 
-            import_entry(name,0) #obj name
-            import_entry(name,1) #obj link
-            row_enter+=1
+        
+        if name == "CUBE":
+            vector = self.camera.forward
+            new_pos = self.camera.position+vector*3
+            self.add_cube(new_pos)
+        elif name == "LIGHT":
+            vector = self.camera.forward
+            new_pos = self.camera.position+vector*3
+            self.add_light(new_pos)
         else:
-            newWindow.geometry("375x70")
-            tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
-            for i in range(3):
-                multiple_entry(i)
+            newWindow = tk.Tk()
+            row_enter = 2
+            # sets the title of the
+            # Toplevel widget
+            newWindow.title("Input")
+            newWindow.wm_attributes("-topmost",True) #keep it on top
 
-        tk.Button(newWindow, 
-                        text="Enter",
-                        padx = 10, 
-                        command = func).grid(row=row_enter) #button enter
-        newWindow.mainloop()   
+            input_str = []
+
+            if name == "name" or name == "texture" or name == "vao" or name == "intensity":
+                newWindow.geometry("125x70")
+                tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
+                one_entry(0)
+
+    #destroy button
+            elif name == "destroy":
+                if self.camera.selected_obj != None:
+                    self.camera.selected_obj.destroy()
+    #for the higher params
+            elif name == "QUIT":
+                self.mesh.destroy()
+                self.scene_renderer.destroy()
+                pg.quit()
+                sys.exit()
+            elif name == "TEXTURE":
+                newWindow.geometry("125x90")
+                tk.Label(newWindow, text=f"{name}").grid(row=0) 
+                import_entry(name,0) #texture name
+                import_entry(name,1) #texture link
+                row_enter+=1
+            elif name == "MODEL":
+                newWindow.geometry("125x90")
+                tk.Label(newWindow, text=f"{name}").grid(row=0) 
+                import_entry(name,0) #obj name
+                import_entry(name,1) #obj link
+                row_enter+=1
+            else:
+                newWindow.geometry("375x70")
+                tk.Label(newWindow, text=f"{name}").grid(row=0) #white part
+                for i in range(3):
+                    multiple_entry(i)
+
+            tk.Button(newWindow, 
+                            text="Enter",
+                            padx = 10, 
+                            command = func).grid(row=row_enter) #button enter
+            newWindow.mainloop()   
             
 
 
