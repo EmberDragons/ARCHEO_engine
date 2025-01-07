@@ -1,0 +1,33 @@
+{
+  "created_at": "2025-01-07T21:32:46.709333",
+  "version": "0.1",
+  "mtllibs": [
+    "Oak.mtl"
+  ],
+  "vertex_buffers": [
+    {
+      "material": "bare_branches",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 0,
+      "byte_length": 219648
+    },
+    {
+      "material": "bare_trunk",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 219648,
+      "byte_length": 748128
+    },
+    {
+      "material": "branches",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 967776,
+      "byte_length": 558720
+    },
+    {
+      "material": "trunk",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 1526496,
+      "byte_length": 1197888
+    }
+  ]
+}

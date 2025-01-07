@@ -1,0 +1,105 @@
+{
+  "created_at": "2025-01-07T22:07:32.894380",
+  "version": "0.1",
+  "mtllibs": [
+    "damas mk2.mtl"
+  ],
+  "vertex_buffers": [
+    {
+      "material": "\u041c\u0430\u0442\u0435\u0440\u0438\u0430\u043b.001",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 0,
+      "byte_length": 368640
+    },
+    {
+      "material": "\u0437\u0435\u0440\u043a\u0430\u043b\u043e",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 368640,
+      "byte_length": 36864
+    },
+    {
+      "material": "\u043a\u0440\u0430\u0441\u043d\u043e\u0435_\u0441\u0442\u0435\u043a\u043b\u043e",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 405504,
+      "byte_length": 117888
+    },
+    {
+      "material": "\u043a\u0443\u0437\u043e\u0432",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 523392,
+      "byte_length": 1192128
+    },
+    {
+      "material": "\u043e\u0431\u0438\u0432\u043a\u0430",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 1715520,
+      "byte_length": 3881088
+    },
+    {
+      "material": "\u043e\u043a\u043d\u0430",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 5596608,
+      "byte_length": 55392
+    },
+    {
+      "material": "\u043f\u0430\u043d\u0435\u043b\u044c",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 5652000,
+      "byte_length": 618144
+    },
+    {
+      "material": "\u043f\u043b\u0430\u0441\u0442\u0438\u043a",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 6270144,
+      "byte_length": 1484736
+    },
+    {
+      "material": "\u043f\u043b\u0430\u0441\u0442\u0438\u043a_\u0441\u0435\u0440\u0435\u0431\u0440\u043e",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 7754880,
+      "byte_length": 42816
+    },
+    {
+      "material": "\u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0438\u043a",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 7797696,
+      "byte_length": 22656
+    },
+    {
+      "material": "\u0440\u0435\u0437\u0438\u043d\u0430",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 7820352,
+      "byte_length": 282624
+    },
+    {
+      "material": "\u0441\u0442\u0435\u043a\u043b\u043e2",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 8102976,
+      "byte_length": 19200
+    },
+    {
+      "material": "\u0441\u0442\u0435\u043a\u043b\u043e_\u043a\u0440\u0430\u0441\u043d\u044b\u0439",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 8122176,
+      "byte_length": 19008
+    },
+    {
+      "material": "\u0445\u0440\u043e\u043c",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 8141184,
+      "byte_length": 356544
+    },
+    {
+      "material": "\u0447\u0435\u0440\u043d\u044b\u0439",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 8497728,
+      "byte_length": 247296
+    },
+    {
+      "material": "\u0447\u0435\u0440\u043d\u044b\u0439_\u043c\u0435\u0442\u0430\u043b\u043b",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 8745024,
+      "byte_length": 4181952
+    }
+  ]
+}

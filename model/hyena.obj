@@ -1,6 +1,6 @@
 # Blender 3.6.0
 # www.blender.org
-mtllib untitled.mtl
+mtllib hyena.mtl
 g PUMA_PUMA
 v 0.859039 -0.679774 -0.713496
 v 0.422664 -1.113922 -0.713773

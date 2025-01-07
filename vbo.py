@@ -207,7 +207,7 @@ class ObjectVBO(BaseVBO):
         for name, material in obj.materials.items():
             # Contains the vertex format (string) such as "T2F_N3F_V3F"
             # Contains the vertex list of floats in the format described above
-            if n<1: #we can only load one object for now
+            if n<250: #we can only load one object for now
                 vert_axe = 0
                 for vert in material.vertices: #A right-hand coordinate system is used
                     if scale[vert_axe%3]<abs(vert):
