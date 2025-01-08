@@ -25,6 +25,7 @@ class GraphicEngine:
         #window size manager
         self.WIN_SIZE = win_size
         #opengl attribute with pygame
+        pg.display.set_caption('ARCHEO') #the name of the game engine
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
@@ -384,7 +385,6 @@ if __name__ == "__main__":
     #window size
     user32 = ctypes.windll.user32
     screensize = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
-
 
     #run game
     game = GraphicEngine(screensize)
