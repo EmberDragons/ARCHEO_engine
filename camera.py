@@ -28,6 +28,11 @@ class Camera():
 
         self.lock = False
         self.selected_obj = None
+        self.old_selected_obj = None
+
+        #ctrl z and y system
+        self.previous = []
+        self.next = []
 
         self.update_camera_vectors()
 
@@ -103,6 +108,14 @@ class Camera():
                 vector = self.vector_world(pg.mouse.get_pos(), self.m_view, self.m_proj, self.app.WIN_SIZE[0], self.app.WIN_SIZE[1])
                 new_pos = self.position+vector*3
                 self.app.add_light(new_pos)
+            if event.type == pg.KEYDOWN and event.key == pg.K_x and len(self.previous)!=0: #before
+                a = self.previous.pop()
+                self.load_previous(a[0],a[1],a[2])
+
+            if event.type == pg.KEYDOWN and event.key == pg.K_c and len(self.next)!=0: #after
+                a = self.next.pop()
+                self.load_next(a[0],a[1],a[2])
+                
             if event.type == pg.MOUSEBUTTONDOWN:
                 #click on objects or uis
                 if pg.mouse.get_pressed()[0]:
@@ -180,6 +193,73 @@ class Camera():
         dist_z = abs(point.z-center.z)
         return (math.sqrt((max(dist_x-scale.x,0))**2 + (max(dist_y-scale.z,0))**2 + (max(dist_z-scale.y,0))**2)) #we are using 2 diff system so y is z
     
+
+    def load_previous(self, name, obj, property):
+        #new list joining scene and lights
+        list_objs = self.app.scene.copy()
+        for light in self.app.lights:
+            list_objs.append(light.light_ui)
+        if obj in list_objs:
+            if name == "name":
+                self.next.append((name,obj,obj.name))
+                obj.name = property
+            if name == "vao":
+                self.next.append((name,obj,obj.vao))
+                obj.on_init_vao(property)
+            if name == "position":
+                self.next.append((name,obj,obj.position))
+                obj.position = property
+            if name == "rotation":
+                self.next.append((name,obj,obj.rotation))
+                obj.rotation = property
+            if name == "scale":
+                self.next.append((name,obj,obj.scale))
+                obj.scale = property
+            if name == "texture":
+                self.next.append((name,obj,obj.tex_id))
+                obj.tex_id = property
+            if name == "intensity":
+                self.next.append((name,obj,obj.intensity))
+                obj.intensity = property
+            if name == "color":
+                self.next.append((name,obj,obj.color))
+                obj.color = property
+            obj.m_model = obj.get_model_matrix(self)
+            obj.on_init()
+
+    def load_next(self, name, obj, property):
+        #new list joining scene and lights
+        list_objs = self.app.scene.copy()
+        for light in self.app.lights:
+            list_objs.append(light.light_ui)
+        if obj in list_objs:
+            if name == "name":
+                self.previous.append((name,obj,obj.name))
+                obj.name = property
+            if name == "vao":
+                self.previous.append((name,obj,obj.vao))
+                obj.on_init_vao(property)
+            if name == "position":
+                self.previous.append((name,obj,obj.position))
+                obj.position = property
+            if name == "rotation":
+                self.previous.append((name,obj,obj.rotation))
+                obj.rotation = property
+            if name == "scale":
+                self.previous.append((name,obj,obj.scale))
+                obj.scale = property
+            if name == "texture":
+                self.previous.append((name,obj,obj.tex_id))
+                obj.tex_id = property
+            if name == "intensity":
+                self.previous.append((name,obj,obj.intensity))
+                obj.intensity = property
+            if name == "color":
+                self.previous.append((name,obj,obj.color))
+                obj.color = property
+            obj.m_model = obj.get_model_matrix(self)
+            obj.on_init()
+
 
     def vector_world(self, mouse_pos, mat_view, mat_projection, SCR_WIDTH, SCR_HEIGHT):
         x = (2 * mouse_pos[0]) / SCR_WIDTH - 1

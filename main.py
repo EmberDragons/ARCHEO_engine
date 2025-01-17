@@ -282,17 +282,24 @@ class GraphicEngine:
         def func():
             #button was pressed
             if self.camera.selected_obj != None:
+                self.camera.next.clear()
                 if name == "name":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.name))
                     self.camera.selected_obj.name = input_str[0].get()
                 if name == "vao":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.vao))
                     self.camera.selected_obj.on_init_vao(input_str[0].get())
                 if name == "position":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.position))
                     self.camera.selected_obj.position = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "rotation":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.rotation))
                     self.camera.selected_obj.rotation = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "scale":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.scale))
                     self.camera.selected_obj.scale = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
                 if name == "texture":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.tex_id))
                     self.camera.selected_obj.tex_id = input_str[0].get()
                     to_int = True
                     for caracters in self.camera.selected_obj.tex_id:
@@ -301,8 +308,10 @@ class GraphicEngine:
                     if to_int: #we check if the entered caracters are nbrs, if so we transform the tex_id type to int
                         self.camera.selected_obj.tex_id = int(self.camera.selected_obj.tex_id)
                 if name == "intensity":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.intensity))
                     self.camera.selected_obj.intensity = input_str[0].get()
                 if name == "color":
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.color))
                     self.camera.selected_obj.color = glm.vec3(float(input_str[0].get()), float(input_str[1].get()), float(input_str[2].get()))
 
                 self.camera.selected_obj.m_model = self.camera.selected_obj.get_model_matrix(self)
