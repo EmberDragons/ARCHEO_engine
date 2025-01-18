@@ -3,6 +3,9 @@ import pygame as pg
 import sys, os
 import math
 
+from model import *
+import lights
+
 FOV = 70
 NEAR = 0.1
 FAR = 100
@@ -96,6 +99,8 @@ class Camera():
         #props instantiation
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                self.save_lights()
+                self.save_scene()
                 self.app.mesh.destroy()
                 self.app.scene_renderer.destroy()
                 pg.quit()
@@ -259,6 +264,57 @@ class Camera():
                 obj.color = property
             obj.m_model = obj.get_model_matrix(self.app)
             obj.on_init()
+
+    def save_imports(self, name, link_tex, link_model):
+        with open("saving_sys/saved_imports.csv",mode="a",encoding="utf-8") as file: #saves the textures and models in a csv file
+            file.write(f"{name};{link_tex};{link_model};\n")
+    def load_imports(self):
+        with open("saving_sys/saved_imports.csv","r",encoding="utf-8") as file: #reads all lines in the csv file and loads the textures and models
+            list = file.readlines()
+            if len(list) != 0:
+                for line in list:
+                    list_attribs = line.split(';')
+                    #if the 3rd attributs is none then this is only a texture
+                    if list_attribs[2] == "None":
+                        self.app.mesh.texture.load_texture_obj(f"{list_attribs[0]}",list_attribs[1])
+                    else:
+                        if list_attribs[1] == "None":
+                            list_attribs[1] = None
+                        self.app.mesh.load_texture_obj(f"{list_attribs[0]}",link_tex=list_attribs[1], link=f"{list_attribs[2]}")
+
+
+    def save_scene(self):
+        with open("saving_sys/saved_scene.csv",mode="w",encoding="utf-8") as file: #saves the textures and models in a csv file
+            for object in self.app.scene: #CLASSE NAME  ,pos, rot, scale, tex_id, vao_name,name
+                file.write(f"cube;{object.position[0]};{object.position[1]};{object.position[2]};{object.rotation[0]};{object.rotation[1]};{object.rotation[2]};{object.scale[0]};{object.scale[1]};{object.scale[2]};{object.tex_id};{object.vao_name};{object.name};\n")
+    def load_scene(self):
+        with open("saving_sys/saved_scene.csv",mode="r",encoding="utf-8") as file: #saves the textures and models in a csv file
+            list = file.readlines()
+            if len(list) != 0:
+                for line in list:
+                    l = line.split(';')
+                    #first attrib is classe
+                    if l[10][0] in ["0","1","2","3","4","5","6","7","8","9"]:
+                        l[10] = int(l[10])
+                    if l[0] == 'cube':
+                        self.app.scene.append(Cube(self.app, (float(l[1]),float(l[2]),float(l[3])), (float(l[4]),float(l[5]),float(l[6])), (float(l[7]),float(l[8]),float(l[9])), tex_id=l[10], name=l[12]))
+                    self.app.scene[-1].on_init_vao(l[11])
+
+    def save_lights(self):
+        with open("saving_sys/saved_lights.csv",mode="w",encoding="utf-8") as file: #saves the textures and models in a csv file
+            for light in self.app.lights:  #pos, colour, intensity, name, param
+                file.write(f"{light.position[0]};{light.position[1]};{light.position[2]};{light.color[0]};{light.color[1]};{light.color[2]};{light.intensity};{light.name};{light.type_of_light};\n")
+    def load_lights(self):
+        with open("saving_sys/saved_lights.csv",mode="r",encoding="utf-8") as file: #saves the textures and models in a csv file
+            list = file.readlines()
+            if len(list) != 0:
+                for line in list:
+                    l = line.split(';')
+                    if l[8] == "None":
+                        l[8] = None
+
+                    self.app.lights.append(lights.Light(self.app, (float(l[0]),float(l[1]),float(l[2])), (float(l[3]),float(l[4]),float(l[5])), intensity=float(l[6]), name=l[7], param=l[8]))
+
 
 
     def vector_world(self, mouse_pos, mat_view, mat_projection, SCR_WIDTH, SCR_HEIGHT):

@@ -46,6 +46,8 @@ class GraphicEngine:
         #mesh, vbo and vao set up
         self.mesh = Mesh(self) #contains the textures
 
+        #saved data loading:
+        self.camera.load_imports()
 
         #scene rendering program
         self.scene_renderer = SceneRenderer(self)
@@ -69,8 +71,8 @@ class GraphicEngine:
         self.type_params = 0 #0 => obj nparams 1 => light params
 
     def scene_set_up(self):
-        self.scene.append(Cube(self, (0,0,0), (0,0,0), (20,20,0.1), tex_id=1))
-        self.scene.append(Cube(self, (-11,10,0), (0,0,0), (1,1,1),  tex_id=0))
+        self.camera.load_scene()
+        
     
     def add_cube(self, pos):
         self.scene.append(Cube(self, pos, tex_id=0))
@@ -168,8 +170,7 @@ class GraphicEngine:
         
 
     def light_set_up(self):
-        self.lights.append(Light(self, (0,30,2), (230,220,200), 5, name ="sun")) #main light
-        self.lights.append(Light(self, (5,10,2), (230,220,200), 1, param="point"))
+        self.camera.load_lights()
         
     def add_light(self, pos):
         if len(self.lights)<4:
@@ -319,9 +320,15 @@ class GraphicEngine:
 
             #imports
             if name == "TEXTURE":
-                self.mesh.texture.load_texture_obj(f"{input_str[0].get()}", f"{input_str[1]}")
+                name_obj=input_str[0].get()
+                link_tex = input_str[1]
+                self.mesh.texture.load_texture_obj(f"{name_obj}", f"{link_tex}")
+                self.camera.save_imports(name_obj,link_tex,"None")
             if name == "MODEL":
-                self.mesh.load_texture_obj(f"{input_str[0].get()}",link_tex=None, link=f"{input_str[1]}")
+                name_obj=input_str[0].get()
+                link_model = input_str[1]
+                self.mesh.load_texture_obj(f"{name_obj}",link_tex=None, link=f"{link_model}")
+                self.camera.save_imports(name_obj,"None",link_model)
             
 
             reset_button()
@@ -360,6 +367,8 @@ class GraphicEngine:
                     self.camera.selected_obj.destroy()
     #for the higher params
             elif name == "QUIT":
+                self.camera.save_lights()
+                self.camera.save_scene()
                 self.mesh.destroy()
                 self.scene_renderer.destroy()
                 pg.quit()
