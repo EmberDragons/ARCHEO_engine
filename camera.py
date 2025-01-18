@@ -204,7 +204,7 @@ class Camera():
                 self.next.append((name,obj,obj.name))
                 obj.name = property
             if name == "vao":
-                self.next.append((name,obj,obj.vao))
+                self.next.append((name,obj,obj.vao_name))
                 obj.on_init_vao(property)
             if name == "position":
                 self.next.append((name,obj,obj.position))
@@ -224,7 +224,7 @@ class Camera():
             if name == "color":
                 self.next.append((name,obj,obj.color))
                 obj.color = property
-            obj.m_model = obj.get_model_matrix(self)
+            obj.m_model = obj.get_model_matrix(self.app)
             obj.on_init()
 
     def load_next(self, name, obj, property):
@@ -237,7 +237,7 @@ class Camera():
                 self.previous.append((name,obj,obj.name))
                 obj.name = property
             if name == "vao":
-                self.previous.append((name,obj,obj.vao))
+                self.previous.append((name,obj,obj.vao_name))
                 obj.on_init_vao(property)
             if name == "position":
                 self.previous.append((name,obj,obj.position))
@@ -257,7 +257,7 @@ class Camera():
             if name == "color":
                 self.previous.append((name,obj,obj.color))
                 obj.color = property
-            obj.m_model = obj.get_model_matrix(self)
+            obj.m_model = obj.get_model_matrix(self.app)
             obj.on_init()
 
 

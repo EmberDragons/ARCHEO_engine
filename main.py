@@ -287,7 +287,7 @@ class GraphicEngine:
                     self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.name))
                     self.camera.selected_obj.name = input_str[0].get()
                 if name == "vao":
-                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.vao))
+                    self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.vao_name))
                     self.camera.selected_obj.on_init_vao(input_str[0].get())
                 if name == "position":
                     self.camera.previous.append((name,self.camera.selected_obj,self.camera.selected_obj.position))
