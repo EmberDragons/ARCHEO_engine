@@ -1,4 +1,0 @@
-Here are the required libraries:
-    -pygame
-    -pyGLM
-    -modernglgl

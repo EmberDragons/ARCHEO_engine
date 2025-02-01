@@ -1,0 +1,5 @@
+pygame
+pyGLM
+moderngl
+numpy
+Pywavefront
