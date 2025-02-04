@@ -21,7 +21,7 @@ class GraphicEngine:
     def __init__(self, win_size=(1000,1000)):
         #init pygame modules and set up
         pg.init()
-        self.font = pg.font.SysFont('merryweather', 100)
+        self.font = pg.font.SysFont('merriweather', 100
         #window size manager
         self.WIN_SIZE = win_size
         #opengl attribute with pygame
